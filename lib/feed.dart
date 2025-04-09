@@ -1688,7 +1688,14 @@ class _FeedPageState extends State<FeedPage> {
                             commentController.clear();
                           }
                         },
-                        child: Text(getText("send")),
+                        child: Text(
+                          getText("send"),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
                       ),
                     ],
                   ),

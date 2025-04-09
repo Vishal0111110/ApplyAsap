@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'question_screen.dart';
 import 'start_screen.dart';
-import 'user_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -17,6 +16,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Additional delay if needed
     await Future.delayed(const Duration(seconds: 2));
     // Check user status and navigate accordingly.
-    if (UserController.user != null) {
+    if (currentUserId != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const QuestionScreen()),
       );

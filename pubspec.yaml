@@ -28,17 +28,18 @@ dependencies:
   share_plus: ^7.2.0
   firebase_storage: ^11.5.6
   image_picker: ^1.0.5
-
+  flutter_inappwebview: ^6.0.0
   flutter_markdown: ^0.6.18+2
   markdown_widget: ^2.3.1
+  flutter_tts: ^3.8.0
   adaptive_theme: ^3.4.1
-  flutter_share: ^2.0.0
+  speech_to_text: ^6.5.1
   settings_ui: ^2.0.2
   image: ^4.1.3
-  image_gallery_saver: ^2.0.3
   shared_preferences: ^2.2.2
   flutter_svg: ^2.0.8
   cached_network_image: ^3.3.1
+  camera: ^0.10.4
 
 dev_dependencies:
   flutter_test:
