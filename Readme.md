@@ -47,14 +47,16 @@ Apply ASAP serves as an intelligent career companion, helping job seekers discov
 - A real-time feed where users can post updates, share achievements, and exchange career tips.
 - AI-powered personalized recommendations ensure users see the most relevant content.
 
+**AI Interviews & Soft Skill Analysis**
+
+- Real-time interview simulations and evaluations for better preparation.
+- Provides detailed feedback to enhance both technical and soft skills.
+
 **Upcoming Features**
 
-- **AI Interviews & Soft Skill Analysis:** Real-time interview simulations and evaluations for better preparation.
 - **Blockchain-Backed Tradable Rewards:** Secure, blockchain-based credentials and rewards that enhance professional profiles and can be redeemed for career benefits.
 - **AI-Generated Practice Questions:** Custom-tailored practice questions to improve technical and soft skills.
 - **Corporate Tie-Ups:** Partnerships with companies and job portals (e.g., Unstop) to provide exclusive job opportunities and streamlined applications.
 - **Enhanced Career Coaching:** An evolved chatbot offering in-depth career coaching, progress tracking, and industry-relevant insights.
 
 Apply ASAP is your AI-powered partner in career growth, ensuring a seamless and personalized job-seeking experience.
-
-
