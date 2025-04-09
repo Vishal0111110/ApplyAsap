@@ -8,13 +8,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:dart_openai/dart_openai.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'question_data.dart';
 import 'chat_screen.dart';
-import 'start_screen.dart';
-import 'user_controller.dart';
+import 'interview.dart';
+import 'profile.dart';
 import 'community.dart';
 import 'feed.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'web.dart';
 
 class ResultScreen extends StatefulWidget {
   final QuestionData answers;
@@ -172,7 +173,8 @@ The output should be in this exact format:
             "میں اس پر ہوں۔",
             "تھوڑی دیر۔",
             "بس ایک لمحہ۔"
-          ]
+          ],
+          "aiInterview": "اے آئی انٹرویو"
         };
       case "ਪੰਜਾਬੀ":
         return {
@@ -196,7 +198,8 @@ The output should be in this exact format:
             "ਮੈਂ ਇਸ ਤੇ ਹਾਂ।",
             "ਇੱਕ ਪਲ।",
             "ਕ੍ਰਿਪਾ ਕਰਕੇ ਰੁਕੋ।"
-          ]
+          ],
+          "aiInterview": "ਏਆਈ ਇੰਟਰਵਿਊ"
         };
       case "हरियाणवी":
         return {
@@ -220,7 +223,8 @@ The output should be in this exact format:
             "मैं इस पे सै।",
             "थोड़ा सा इंतजार कर।",
             "बस एक पल।"
-          ]
+          ],
+          "aiInterview": "एआई इंटरव्यू"
         };
       case "हिन्दी":
         return {
@@ -244,7 +248,8 @@ The output should be in this exact format:
             "मैं इस पर हूँ।",
             "थोड़ा समय दीजिए।",
             "बस एक क्षण।"
-          ]
+          ],
+          "aiInterview": "एआई साक्षात्कार"
         };
       case "राजस्थानी":
         return {
@@ -268,7 +273,8 @@ The output should be in this exact format:
             "मैं इस पे हूँ।",
             "थोड़ी देर रुकजो।",
             "बस एक क्षण।"
-          ]
+          ],
+          "aiInterview": "एआई इंटरव्यू"
         };
       case "भोजपुरी":
         return {
@@ -292,7 +298,8 @@ The output should be in this exact format:
             "हम ए पर बानी।",
             "थोड़ा देर दीं।",
             "बस एक पल।"
-          ]
+          ],
+          "aiInterview": "एआई इंटरव्यू"
         };
       case "বাংলা":
         return {
@@ -316,7 +323,8 @@ The output should be in this exact format:
             "আমি কাজ করছি।",
             "দয়া করে একটু সময় দিন।",
             "কেবল এক মুহূর্ত।"
-          ]
+          ],
+          "aiInterview": "এআই সাক্ষাৎকার"
         };
       case "ગુજરાતી":
         return {
@@ -340,7 +348,8 @@ The output should be in this exact format:
             "હું આ પર છું.",
             "થોડી વાર રાહ આપો.",
             "માત્ર એક ક્ષણ."
-          ]
+          ],
+          "aiInterview": "એઆઈ ઇન્ટરવ્યૂ"
         };
       case "অসমীয়া":
         return {
@@ -364,7 +373,8 @@ The output should be in this exact format:
             "মই কামত আছো।",
             "অনুগ্ৰহ কৰি অলপ সময় দিয়ক।",
             "মাত্ৰ এক ক্ষণ।"
-          ]
+          ],
+          "aiInterview": "এআই সাক্ষাৎকাৰ"
         };
       case "ଓଡ଼ିଆ":
         return {
@@ -388,7 +398,8 @@ The output should be in this exact format:
             "ମୁଁ ଏହାରେ ଅଛି।",
             "ଦୟାକରି କିଛି ସମୟ ଦିଅନ୍ତୁ।",
             "ମାତ୍ର ଏକ ମୁହୂର୍ତ୍ତ।"
-          ]
+          ],
+          "aiInterview": "ଏଆଇ ସାକ୍ଷାତ୍କାର"
         };
       case "मराठी":
         return {
@@ -412,7 +423,8 @@ The output should be in this exact format:
             "मी कामात आहे.",
             "थोडा वेळ द्या.",
             "फक्त एक क्षण."
-          ]
+          ],
+          "aiInterview": "एआय मुलाखत"
         };
       case "தமிழ்":
         return {
@@ -436,7 +448,8 @@ The output should be in this exact format:
             "நான் இதில் இருக்கிறேன்.",
             "சற்று நேரம் கொடுக்கவும்.",
             "மாத்திரம் ஒரு நொடி."
-          ]
+          ],
+          "aiInterview": "ஏ.ஐ. நேர்முகம்"
         };
       case "తెలుగు":
         return {
@@ -460,7 +473,8 @@ The output should be in this exact format:
             "నేను దీనిపై ఉన్నాను.",
             "కొద్దిగా సమయం ఇవ్వండి.",
             "కేవలం ఒక క్షణం."
-          ]
+          ],
+          "aiInterview": "ఏఐ ఇంటర్వ్యూ"
         };
       case "ಕನ್ನಡ":
         return {
@@ -484,7 +498,8 @@ The output should be in this exact format:
             "ನಾನು ಇದರಲ್ಲಿ ಇದ್ದೇನೆ.",
             "ಸ್ವಲ್ಪ ಸಮಯ ನೀಡಿ.",
             "ಮಾತ್ರ ಒಂದು ಕ್ಷಣ."
-          ]
+          ],
+          "aiInterview": "ಎಐ ಸಂದರ್ಶನ"
         };
       case "മലയാളം":
         return {
@@ -508,7 +523,8 @@ The output should be in this exact format:
             "ഞാൻ ഇതിൽ പ്രവർത്തിക്കുന്നു.",
             "ദയവായി കുറച്ച് സമയം കൊടുക്കുക.",
             "ഒരിക്കൽ മാത്രം."
-          ]
+          ],
+          "aiInterview": "എഐ ഇന്റർവ്യൂ"
         };
       case "English":
       default:
@@ -533,10 +549,12 @@ The output should be in this exact format:
             "I'm on it.",
             "Be right back.",
             "Just a sec, I'm buffering."
-          ]
+          ],
+          "aiInterview": "AI Interview"
         };
     }
   }
+
 
   int getLanguageIndex(String lang) {
     switch (lang) {
@@ -584,7 +602,9 @@ The output should be in this exact format:
 
   static final Color cardBorder = Colors.grey[800]!;
   @override
-  Widget build(BuildContext context) {
+
+  @override
+/*  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF000000), // Dark background
       extendBody: true,
@@ -625,21 +645,16 @@ The output should be in this exact format:
                     itemBuilder: (context, index) {
                       final entry = data.entries.elementAt(index);
                       return FutureBuilder(
-                        future:
-                            Future.delayed(Duration(milliseconds: 200 * index)),
+                        future: Future.delayed(Duration(milliseconds: 200 * index)),
                         builder: (context, delayedSnapshot) {
-                          if (delayedSnapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (delayedSnapshot.connectionState == ConnectionState.waiting) {
                             return Container();
                           } else {
                             String skillsString = entry.value[1];
                             if (skillsString.contains("Skills Required:")) {
-                              skillsString = skillsString
-                                  .replaceFirst("Skills Required:", "")
-                                  .trim();
+                              skillsString = skillsString.replaceFirst("Skills Required:", "").trim();
                             }
                             final skills = skillsString.split(',');
-
                             // Create an AnimationController for the slide transition.
                             final slideController = AnimationController(
                               duration: const Duration(milliseconds: 300),
@@ -682,15 +697,13 @@ The output should be in this exact format:
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: const Color(0xFF1F1F1F),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        borderRadius: BorderRadius.circular(10.0),
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 25, vertical: 12),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             // Title text.
                                             Text(
@@ -701,7 +714,6 @@ The output should be in this exact format:
                                                 color: Colors.white,
                                               ),
                                             ),
-                                            // Space between title and description.
                                             const SizedBox(height: 5),
                                             // Description text.
                                             Text(
@@ -711,16 +723,14 @@ The output should be in this exact format:
                                                 color: Color(0xFFD1D1D1),
                                               ),
                                             ),
-                                            // Space between description and divider.
                                             const SizedBox(height: 7),
                                             const Divider(
                                               thickness: 4.5,
                                               color: Color(0xFF2A2A2A),
                                             ),
-                                            // Space between divider and "Skills Required" text.
                                             const SizedBox(height: 7),
                                             Text(
-                                              localizedTexts["skillsRequired"],
+                                              localizedTexts["skillsRequired"]!,
                                               style: const TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
@@ -734,8 +744,7 @@ The output should be in this exact format:
                                               children: [
                                                 for (var skill in skills)
                                                   Chip(
-                                                    backgroundColor:
-                                                        const Color(0xFF323232),
+                                                    backgroundColor: const Color(0xFF323232),
                                                     label: Text(
                                                       skill.trim(),
                                                       style: const TextStyle(
@@ -743,116 +752,73 @@ The output should be in this exact format:
                                                         color: Colors.white,
                                                       ),
                                                     ),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(10),
                                                       side: const BorderSide(
-                                                        color:
-                                                            Color(0xFF5BC0EB),
+                                                        color: Color(0xFF5BC0EB),
                                                       ),
                                                     ),
                                                   ),
                                               ],
                                             ),
                                             // Buttons row.
-                                            if (entry.value.length > 2 ||
-                                                entry.value.length > 3)
+                                            if (entry.value.length > 2 || entry.value.length > 3)
                                               Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 15),
+                                                padding: const EdgeInsets.only(top: 15),
                                                 child: Row(
                                                   children: [
                                                     if (entry.value.length > 2)
                                                       Expanded(
                                                         child: ElevatedButton(
-                                                          onPressed: () async {
-                                                            final url =
-                                                                entry.value[2];
-                                                            if (await canLaunch(
-                                                                url)) {
-                                                              await launch(url);
-                                                            } else {
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                SnackBar(
-                                                                  content: Text(
-                                                                    localizedTexts[
-                                                                            "applyNow"] +
-                                                                        " - Could not launch job link",
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }
+                                                          onPressed: () {
+                                                            final url = entry.value[2];
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    InAppWebViewScreen(
+                                                                      url: url,
+                                                                      title: localizedTexts["applyNow"]!,
+                                                                    ),
+                                                              ),
+                                                            );
                                                           },
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                            backgroundColor:
-                                                                const Color(
-                                                                    0xFF5BC0EB),
-                                                            foregroundColor:
-                                                                Colors.white,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10.0),
+                                                          style: ElevatedButton.styleFrom(
+                                                            backgroundColor: const Color(0xFF5BC0EB),
+                                                            foregroundColor: Colors.white,
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(10.0),
                                                             ),
                                                           ),
-                                                          child: Text(
-                                                              localizedTexts[
-                                                                  "applyNow"]),
+                                                          child: Text(localizedTexts["applyNow"]!),
                                                         ),
                                                       ),
-                                                    if (entry.value.length >
-                                                            2 &&
-                                                        entry.value.length > 3)
+                                                    if (entry.value.length > 2 && entry.value.length > 3)
                                                       const SizedBox(width: 2),
                                                     if (entry.value.length > 3)
                                                       Expanded(
                                                         child: ElevatedButton(
-                                                          onPressed: () async {
-                                                            final coursesUrl =
-                                                                entry.value[3];
-                                                            if (await canLaunch(
-                                                                coursesUrl)) {
-                                                              await launch(
-                                                                  coursesUrl);
-                                                            } else {
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                SnackBar(
-                                                                  content: Text(
-                                                                    localizedTexts[
-                                                                            "learnNow"] +
-                                                                        " - Could not launch courses link",
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }
+                                                          onPressed: () {
+                                                            final coursesUrl = entry.value[3];
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    InAppWebViewScreen(
+                                                                      url: coursesUrl,
+                                                                      title: localizedTexts["learnNow"]!,
+                                                                    ),
+                                                              ),
+                                                            );
                                                           },
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                            backgroundColor:
-                                                                const Color(
-                                                                    0xFF5BC0EB),
-                                                            foregroundColor:
-                                                                Colors.white,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10.0),
+                                                          style: ElevatedButton.styleFrom(
+                                                            backgroundColor: const Color(0xFF5BC0EB),
+                                                            foregroundColor: Colors.white,
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(10.0),
                                                             ),
                                                           ),
-                                                          child: Text(
-                                                              localizedTexts[
-                                                                  "learnNow"]),
+                                                          child: Text(localizedTexts["learnNow"]!),
                                                         ),
                                                       ),
                                                   ],
@@ -924,7 +890,393 @@ The output should be in this exact format:
         kBottomRadius: 2.0,
       ),
     );
+  }*/
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF000000), // Dark background
+      extendBody: true,
+      appBar: _buildAppBar(),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          // Dashboard Page with FutureBuilder and ListView.
+          Center(
+            child: FutureBuilder<ResultData>(
+              future: futureResult,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return SpinKitPouringHourGlassRefined(
+                    color: const Color(0xFF5BC0EB), // Accent color for spinner
+                    size: 120,
+                  );
+                } else if (snapshot.hasError) {
+                  return Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(color: Colors.white),
+                  );
+                } else if (snapshot.hasData) {
+                  final lang = snapshot.data!.language ?? "English";
+                  // Update language index if needed.
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    final newIndex = getLanguageIndex(lang);
+                    if (_languageIndex != newIndex) {
+                      setState(() {
+                        _languageIndex = newIndex;
+                      });
+                    }
+                  });
+                  final localizedTexts = getLocalizedTexts(lang);
+                  final data = snapshot.data!.result;
+                  return ListView.builder(
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      final entry = data.entries.elementAt(index);
+                      return FutureBuilder(
+                        future: Future.delayed(Duration(milliseconds: 200 * index)),
+                        builder: (context, delayedSnapshot) {
+                          if (delayedSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container();
+                          } else {
+                            String skillsString = entry.value[1];
+                            if (skillsString.contains("Skills Required:")) {
+                              skillsString = skillsString
+                                  .replaceFirst("Skills Required:", "")
+                                  .trim();
+                            }
+                            final skills = skillsString.split(',');
+
+                            // Create an AnimationController for the slide transition.
+                            final slideController = AnimationController(
+                              duration: const Duration(milliseconds: 300),
+                              vsync: this,
+                            )..forward();
+
+                            return SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(1, 0),
+                                end: Offset.zero,
+                              ).animate(
+                                CurvedAnimation(
+                                  parent: slideController,
+                                  curve: Curves.easeInOutSine,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: InkWell(
+                                  onTap: () {
+                                   /* Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatScreen(
+                                          career: entry.key,
+                                          ans: widget.answers,
+                                        ),
+                                      ),
+                                    );*/
+                                    Navigator.push(context, PageRouteBuilder(
+                                      opaque: true,
+                                      pageBuilder: (context, animation, secondaryAnimation) => ChatScreen(                                          career: entry.key,
+                                        ans: widget.answers,),
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        return FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        );
+                                      },
+                                      transitionDuration: const Duration(milliseconds: 300),
+                                    ));
+
+                                  },
+                                  child: Card(
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      side: BorderSide(
+                                        color: cardBorder,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF1F1F1F),
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 25, vertical: 12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            // Title text.
+                                            Text(
+                                              entry.key,
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            // Description text.
+                                            Text(
+                                              entry.value[0],
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                color: Color(0xFFD1D1D1),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 7),
+                                            const Divider(
+                                              thickness: 4.5,
+                                              color: Color(0xFF2A2A2A),
+                                            ),
+                                            const SizedBox(height: 7),
+                                            Text(
+                                              localizedTexts["skillsRequired"]!,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xFFB0B0B0),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 6.5),
+                                            Wrap(
+                                              spacing: 4,
+                                              runSpacing: 2,
+                                              children: [
+                                                for (var skill in skills)
+                                                  Chip(
+                                                    backgroundColor:
+                                                    const Color(0xFF323232),
+                                                    label: Text(
+                                                      skill.trim(),
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(10),
+                                                      side: const BorderSide(
+                                                        color: Color(0xFF5BC0EB),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                            // Buttons: Apply Now and Learn Now in a row, Interview button beneath.
+                                            if (entry.value.length > 2)
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.only(top: 15),
+                                                child: Column(
+                                                  children: [
+                                                    // Row with Apply Now and Learn Now buttons.
+                                                    Row(
+                                                      children: [
+                                                        // Apply Now button.
+                                                        Expanded(
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              final url =
+                                                              entry.value[2];
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      InAppWebViewScreen(
+                                                                        url: url,
+                                                                        title:
+                                                                        localizedTexts[
+                                                                        "applyNow"]!,
+                                                                      ),
+                                                                ),
+                                                              );
+                                                            },
+                                                            style:
+                                                            ElevatedButton.styleFrom(
+                                                              backgroundColor:
+                                                              const Color(
+                                                                  0xFF5BC0EB),
+                                                              foregroundColor:
+                                                              Colors.white,
+                                                              shape:
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                    10.0),
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                                localizedTexts[
+                                                                "applyNow"]!),
+                                                          ),
+                                                        ),
+                                                        if (entry.value.length > 3)
+                                                          const SizedBox(width: 2),
+                                                        // Learn Now button.
+                                                        if (entry.value.length > 3)
+                                                          Expanded(
+                                                            child: ElevatedButton(
+                                                              onPressed: () {
+                                                                final coursesUrl =
+                                                                entry.value[3];
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        InAppWebViewScreen(
+                                                                          url:
+                                                                          coursesUrl,
+                                                                          title:
+                                                                          localizedTexts[
+                                                                          "learnNow"]!,
+                                                                        ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                              style: ElevatedButton
+                                                                  .styleFrom(
+                                                                backgroundColor:
+                                                                const Color(
+                                                                    0xFF5BC0EB),
+                                                                foregroundColor:
+                                                                Colors.white,
+                                                                shape:
+                                                                RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      10.0),
+                                                                ),
+                                                              ),
+                                                              child: Text(
+                                                                  localizedTexts[
+                                                                  "learnNow"]!),
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    // Interview button beneath.
+                                                    SizedBox(
+                                                      width: double.infinity,
+                                                      child: ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  InterviewPage(
+                                                                    career: entry.key,
+                                                                    ans: widget.answers,
+                                                                    language:
+                                                                    _languageIndex,
+                                                                  ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        style:
+                                                        ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                          const Color(
+                                                              0xFF5BC0EB),
+                                                          foregroundColor:
+                                                          Colors.white,
+                                                          shape:
+                                                          RoundedRectangleBorder(
+                                                            borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                10.0),
+                                                          ),
+                                                        ),
+                                                        child: Text(
+                          localizedTexts[
+                          "aiInterview"]!),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  return const Text(
+                    'No data found.',
+                    style: TextStyle(color: Colors.white),
+                  );
+                }
+              },
+            ),
+          ),
+          // Home Page (or any other page) with language index passed.
+          HomePage(langIndex: _languageIndex),
+          CommunityPage(languageIndex: _languageIndex),
+          FeedPage(languageIndex: _languageIndex),
+          // Add additional pages if required.
+        ],
+      ),
+      bottomNavigationBar: AnimatedNotchBottomBar(
+        notchBottomBarController: _notchBottomBarController,
+        bottomBarItems: [
+          BottomBarItem(
+            inActiveItem: Icon(Icons.home, color: const Color(0xFFB0B0B0)),
+            activeItem: Icon(Icons.home, color: const Color(0xFF5BC0EB)),
+            itemLabel: '',
+          ),
+          BottomBarItem(
+            inActiveItem: Icon(Icons.book, color: const Color(0xFFB0B0B0)),
+            activeItem: Icon(Icons.book, color: const Color(0xFF5BC0EB)),
+            itemLabel: '',
+          ),
+          BottomBarItem(
+            inActiveItem:
+            Icon(Icons.people, color: const Color(0xFFB0B0B0)),
+            activeItem:
+            Icon(Icons.people, color: const Color(0xFF5BC0EB)),
+            itemLabel: '',
+          ),
+          BottomBarItem(
+            inActiveItem:
+            Icon(Icons.rss_feed, color: const Color(0xFFB0B0B0)),
+            activeItem:
+            Icon(Icons.rss_feed, color: const Color(0xFF5BC0EB)),
+            itemLabel: '',
+          ),
+        ],
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        removeMargins: true,
+        bottomBarHeight: 20.0,
+        durationInMilliSeconds: 300,
+        notchColor: const Color(0xFF121212), // Nav Bar background
+        kIconSize: 25.0,
+        kBottomRadius: 2.0,
+      ),
+    );
   }
+
+
 
   PreferredSizeWidget _buildAppBar() {
     switch (_selectedIndex) {
@@ -956,14 +1308,16 @@ The output should be in this exact format:
               builder: (context, snapshot) {
                 // You might conditionally show the image based on snapshot data if needed.
                 // For now, if snapshot has data we display the image, else we show nothing.
+//import 'package:firebase_auth/firebase_auth.dart';
+
                 if (snapshot.hasData) {
                   return GestureDetector(
                     onTap: () async {
-                      await UserController.signOut();
+       //               await FirebaseAuth.instance.signOut();
                       if (mounted) {
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const StartScreen(),
+                            builder: (context) => AccountPage(languageIndex: _languageIndex,),
                           ),
                         );
                       }
@@ -972,7 +1326,7 @@ The output should be in this exact format:
                       padding: const EdgeInsets.only(right: 8.0),
                       child: CircleAvatar(
                         foregroundImage: NetworkImage(
-                          UserController.user?.photoURL ?? '',
+                          FirebaseAuth.instance.currentUser?.photoURL ?? '',
                         ),
                       ),
                     ),
@@ -1058,8 +1412,8 @@ The output should be in this exact format:
   }
 }
 
-// Updated ResultData class that extracts the language directly from the Gemini JSON.
-// The language is stored separately and then removed from the job domains.
+
+
 class ResultData {
   final Map<String, List<String>> result;
   final String? language;
@@ -1096,3 +1450,4 @@ class ResultData {
     return ResultData(result: resultMap, language: lang);
   }
 }
+

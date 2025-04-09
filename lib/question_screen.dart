@@ -6,8 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'result_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'question_data.dart';
-import 'user_controller.dart';
+
 import 'package:firebase_database/firebase_database.dart';
 
 class QuestionScreen extends StatefulWidget {
@@ -23,6 +24,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
   late int _totSteps = 10;
   late QuestionData qns, ans;
   bool _dataLoaded = false; // Flag to track if data is loaded
+  String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
   // Function to load JSON data from a given path
   Future<QuestionData> loadJsonData(String path) async {
@@ -171,12 +173,15 @@ class _QuestionScreenState extends State<QuestionScreen> {
   }
 
   // New initialization function that checks Firebase first, then loads questions if no survey exists.
+  /*
   Future<void> _initialize() async {
-    if (UserController.user != null) {
+    String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (currentUserId != null) {
       final dbRef = FirebaseDatabase.instance
           .ref()
           .child('surveyResponses')
-          .child(UserController.user!.uid);
+          .child(currentUserId);
       final snapshot = await dbRef.get();
       if (snapshot.exists) {
         Navigator.pushReplacement(
@@ -189,6 +194,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
         return;
       }
     }
+
+
+    // Load questions from asset if no survey responses exist.
     qns = await loadJsonData('assets/data/questions.json');
     _totSteps = qns.titles.length;
     ans = QuestionData(
@@ -197,10 +205,69 @@ class _QuestionScreenState extends State<QuestionScreen> {
     );
     // Initialize the current question's answer options.
     ans.options[_index] = qns.options[_index].map((e) => '').toList();
+
+    setState(() {
+      _dataLoaded = true;
+    });
+  }s
+*/
+  Future<void> _initialize() async {
+    String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserId != null) {
+      final dbRef = FirebaseDatabase.instance
+          .ref()
+          .child('surveyResponses')
+          .child(currentUserId);
+      final snapshot = await dbRef.get();
+      if (snapshot.exists) {
+        // The snapshot data is expected to be in the following format:
+        // {
+        //   "answers": "{\"Language Preference\":[\"తెలుగు\"], ... }",
+        //   "questions": "{\"Language Preference\":[\"English\",\"హిందీ\",...]}",
+        //   "timestamp": "2025-04-04T22:29:39.290792"
+        // }
+        Map data = snapshot.value as Map;
+
+        // Decode the JSON strings stored for answers and questions.
+        Map<String, dynamic> answersJson = jsonDecode(data['answers']);
+        Map<String, dynamic> questionsJson = jsonDecode(data['questions']);
+
+        // Create a QuestionData instance for the answers.
+        // This example assumes that the keys of answersJson are the question titles,
+        // and the values are lists (of responses). Adjust this mapping if needed.
+        final surveyAnswers = QuestionData(
+          titles: answersJson.keys.toList(),
+          options: answersJson.values.map((value) {
+            return value is List ? List<String>.from(value) : <String>[];
+          }).toList(),
+        );
+
+        // Navigate directly to the result screen using the newly parsed data.
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultScreen(answers: surveyAnswers),
+          ),
+        );
+        return;
+      }
+    }
+
+    // If no survey response exists, load questions from asset.
+    qns = await loadJsonData('assets/data/questions.json');
+    _totSteps = qns.titles.length;
+    ans = QuestionData(
+      titles: List.from(qns.titles),
+      options: qns.options.map((o) => o.map((e) => '').toList()).toList(),
+    );
+    // Initialize the current question's answer options.
+    ans.options[_index] = qns.options[_index].map((e) => '').toList();
+
     setState(() {
       _dataLoaded = true;
     });
   }
+
 
   @override
   void initState() {
@@ -230,14 +297,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
         margin: const EdgeInsets.all(2),
         child: Column(
           children: [
-            const SizedBox(height: 14.5),
+            const SizedBox(height: 29.5),
             LinearPercentIndicator(
-              lineHeight: 37.0,
+              lineHeight: 32.0,
               percent: _step / _totSteps,
               center: Text(
                 getProgressText(),
                 style: const TextStyle(
-                  fontSize: 17.0,
+                  fontSize: 15.0,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
@@ -457,11 +524,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 gotoStep(++_step);
               });
             } else if (_step == _totSteps) {
-              if (UserController.user != null) {
+              if (currentUserId != null) {
                 final dbRef = FirebaseDatabase.instance
                     .ref()
                     .child('surveyResponses')
-                    .child(UserController.user!.uid);
+                    .child(currentUserId!);
                 dbRef.set({
                   'questions': qns.toJson(),
                   'answers': ans.toJson(),

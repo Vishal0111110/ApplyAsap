@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'colors.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'web.dart';
 import 'category_box.dart';
 import 'feature_item.dart';
 import 'recommend_item.dart';
@@ -869,8 +869,7 @@ class _HomePageState extends State<HomePage> {
     }
     return text;
   }
-
-  void openVideo(int index) async {
+  void openVideo(BuildContext context, int index) {
     final List<String> urls = [
       "https://vimeo.com/1070732701/558b21900f",
       "https://vimeo.com/1070650026/ee8ceda97d",
@@ -891,12 +890,19 @@ class _HomePageState extends State<HomePage> {
     ];
 
     if (index >= 0 && index < urls.length) {
-      final Uri url = Uri.parse(urls[index]);
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-      } else {
-        throw 'Could not launch $url';
-      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InAppWebViewScreen(
+            url: urls[index],
+            title: "Video",
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Invalid video index.")),
+      );
     }
   }
 
