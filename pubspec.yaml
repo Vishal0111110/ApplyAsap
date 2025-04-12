@@ -40,11 +40,21 @@ dependencies:
   flutter_svg: ^2.0.8
   cached_network_image: ^3.3.1
   camera: ^0.10.4
+  reward_popup: ^0.0.7
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
+
+
 
 flutter:
   uses-material-design: true

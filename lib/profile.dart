@@ -48,7 +48,6 @@ int getLanguageIndex(String lang) {
 class AccountPage extends StatefulWidget {
   final int languageIndex;
   const AccountPage({Key? key, required this.languageIndex}) : super(key: key);
-
   @override
   _AccountPageState createState() => _AccountPageState();
 }
@@ -57,6 +56,7 @@ class _AccountPageState extends State<AccountPage> {
   // Define the icon color as a constant variable.
   final Color iconColor = const Color(0xFF5BC0EB);
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  int coinBalance = 0;
   final Map<int, Map<String, String>> translations = {
     0: {
       "profile": "پروفائل",
@@ -256,7 +256,32 @@ class _AccountPageState extends State<AccountPage> {
         translations[15]![key] ??
         key;
   }
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
 
+  Future<void> _loadUserData() async {
+    final String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
+    if (userId.isEmpty) {
+      debugPrint("User is not authenticated.");
+      return;
+    }
+    final DatabaseReference userRef =
+    FirebaseDatabase.instance.ref().child('users').child(userId);
+    final DataSnapshot snapshot = await userRef.get();
+    if (snapshot.exists) {
+      final data = snapshot.value as Map;
+      setState(() {
+        coinBalance = data['coins'] != null ? int.parse(data['coins'].toString()) : 0;
+      });
+    } else {
+      setState(() {
+        coinBalance = 0;
+      });
+      await userRef.set({'coins': 0});
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -382,6 +407,25 @@ class _AccountPageState extends State<AccountPage> {
             title: t("rewards"),
             leadingIcon: "assets/icons/wallet.svg",
             bgIconColor: iconColor,
+            trailingWidget: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  coinBalance.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Image.asset(
+                  'assets/images/coins.png',
+                  width: 20,
+                  height: 20,
+                ),
+              ],
+            ),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -390,7 +434,12 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               );
             },
-          ),
+          )
+          ,
+
+
+
+
         ],
       ),
     );

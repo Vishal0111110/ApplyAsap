@@ -1,5 +1,5 @@
 // ignore_for_file: unnecessary_string_escapes, prefer_const_constructors
-
+import 'learn.dart';
 import 'dart:convert';
 import 'home.dart';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
@@ -555,7 +555,43 @@ The output should be in this exact format:
     }
   }
 
-
+  String getLanguageFromIndex(int index) {
+    switch (index) {
+      case 0:
+        return "कश्मीरी";
+      case 1:
+        return "ਪੰਜਾਬੀ";
+      case 2:
+        return "हरियाणवी";
+      case 3:
+        return "हिन्दी";
+      case 4:
+        return "राजस्थानी";
+      case 5:
+        return "भोजपुरी";
+      case 6:
+        return "বাংলা";
+      case 7:
+        return "ગુજરાતી";
+      case 8:
+        return "অসমীয়া";
+      case 9:
+        return "ଓଡ଼ିଆ";
+      case 10:
+        return "मराठी";
+      case 11:
+        return "தமிழ்";
+      case 12:
+        return "తెలుగు";
+      case 13:
+        return "ಕನ್ನಡ";
+      case 14:
+        return "മലയാളം";
+      case 15:
+      default:
+        return "English";
+    }
+  }
   int getLanguageIndex(String lang) {
     switch (lang) {
       case "कश्मीरी":
@@ -1124,21 +1160,16 @@ The output should be in this exact format:
                                                           Expanded(
                                                             child: ElevatedButton(
                                                               onPressed: () {
-                                                                final coursesUrl =
-                                                                entry.value[3];
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder: (context) =>
-                                                                        InAppWebViewScreen(
-                                                                          url:
-                                                                          coursesUrl,
-                                                                          title:
-                                                                          localizedTexts[
-                                                                          "learnNow"]!,
-                                                                        ),
-                                                                  ),
-                                                                );
+     Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CareerGeminiPage(
+                                          career: entry.key,
+                                          ans: widget.answers,
+                                          lang: getLanguageFromIndex(_languageIndex),
+                                        ),
+                                      ),
+                                    );
                                                               },
                                                               style: ElevatedButton
                                                                   .styleFrom(
