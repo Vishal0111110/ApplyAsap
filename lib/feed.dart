@@ -1,740 +1,16 @@
-/*import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/services.dart'; // For FilteringTextInputFormatter
-import 'package:url_launcher/url_launcher.dart';
-import 'package:video_player/video_player.dart';
-import 'package:path_provider/path_provider.dart';
-
-class FeedPage extends StatefulWidget {
-  const FeedPage({Key? key}) : super(key: key);
-
-  @override
-  State<FeedPage> createState() => _FeedPageState();
-}
-
-class _FeedPageState extends State<FeedPage> {
-  // Reference to the 'posts' node in Firebase Realtime Database
-  final DatabaseReference _postsRef = FirebaseDatabase.instance.ref('posts');
-
-  // Controller for the text field in the bottom sheet
-  final TextEditingController _postController = TextEditingController();
-
-  // Controllers for share dialog
-  final TextEditingController _exportWAController = TextEditingController();
-  final TextEditingController _exportEmailController = TextEditingController();
-
-  // Variables to store the media (image/video) in Base64 format and media type
-  String? _mediaBase64;
-  String? _mediaType;
-
-  // Set to track which posts the user has liked (simulate one like per user)
-  final Set<String> _likedPosts = {};
-
-  /// Opens the bottom sheet for creating a new post.
-  void _openNewPostSheet() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.5,
-          maxChildSize: 0.9,
-          builder: (BuildContext context, ScrollController scrollController) {
-            return Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1F1F1F),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Top row with title and Cancel button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Create a Post",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          "Cancel",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _postController,
-                    maxLines: 5,
-                    style: const TextStyle(
-                      color: Color(0xFFD1D1D1),
-                    ),
-                    decoration: InputDecoration(
-                      hintText: "What's on your mind?",
-                      hintStyle: const TextStyle(
-                        color: Color(0xFFB0B0B0),
-                      ),
-                      filled: true,
-                      fillColor: const Color(0xFF323232),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey[800]!),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: const Color(0xFF5BC0EB)),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF5BC0EB),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: _pickMedia,
-                        icon: const Icon(Icons.attach_file),
-                        label: const Text("Add Media"),
-                      ),
-                      const SizedBox(width: 16),
-                      _mediaBase64 != null
-                          ? const Icon(Icons.check, color: Colors.green)
-                          : const SizedBox.shrink(),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF5BC0EB),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () async {
-                        final content = _postController.text.trim();
-                        if (content.isNotEmpty || _mediaBase64 != null) {
-                          await _postsRef.push().set({
-                            "author": FirebaseAuth
-                                    .instance.currentUser?.displayName ??
-                                "Unknown", // Now gets name from FirebaseAuth
-                            "content": content,
-                            "timestamp": DateTime.now().toIso8601String(),
-                            "likes": 0,
-                            "comments": {},
-                            "media": _mediaBase64 ?? "",
-                            "mediaType": _mediaType ?? ""
-                          });
-                          _postController.clear();
-                          setState(() {
-                            _mediaBase64 = null;
-                            _mediaType = null;
-                          });
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: const Text("Post"),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  /// Opens the file picker using ImagePicker in a bottom sheet.
-  Future<void> _pickMedia() async {
-    showModalBottomSheet(
-      backgroundColor: const Color(0xFF101010),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      context: context,
-      builder: (context) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.image, color: Color(0xFF5BC0EB)),
-                title: const Text(
-                  "Image",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  final picker = ImagePicker();
-                  final pickedFile =
-                      await picker.pickImage(source: ImageSource.gallery);
-                  if (pickedFile != null) {
-                    final bytes = await pickedFile.readAsBytes();
-                    String base64Image = base64Encode(bytes);
-                    setState(() {
-                      _mediaBase64 = base64Image;
-                      _mediaType = 'image';
-                    });
-                  }
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.videocam, color: Color(0xFF5BC0EB)),
-                title: const Text(
-                  "Video",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Video not supported")),
-                  );
-                },
-              ),
-              ListTile(
-                leading:
-                    const Icon(Icons.attach_file, color: Color(0xFF5BC0EB)),
-                title: const Text(
-                  "File",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("File not supported")),
-                  );
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  /// Handles the "Like" functionality by incrementing the like count.
-  /// Allows only one like per valid user.
-  Future<void> _handleLike(String postId, int currentLikes) async {
-    if (_likedPosts.contains(postId)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("You have already liked this post"),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
-    }
-    await _postsRef.child(postId).update({"likes": currentLikes + 1});
-    setState(() {
-      _likedPosts.add(postId);
-    });
-  }
-
-  /// Opens the comment sheet where users can view and add comments.
-  void _openCommentSheet(String postId, Map<dynamic, dynamic> postData) {
-    final TextEditingController commentController = TextEditingController();
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.5,
-          maxChildSize: 0.9,
-          builder: (context, scrollController) {
-            // Get existing comments if any.
-            Map<dynamic, dynamic> comments = {};
-            if (postData['comments'] != null) {
-              comments = Map<dynamic, dynamic>.from(postData['comments']);
-            }
-            List<Map<dynamic, dynamic>> commentsList =
-                comments.entries.map((entry) {
-              return Map<dynamic, dynamic>.from(entry.value);
-            }).toList();
-            // Sort comments by recency.
-            commentsList.sort((a, b) {
-              final timeA =
-                  DateTime.tryParse(a['timestamp'] ?? '') ?? DateTime.now();
-              final timeB =
-                  DateTime.tryParse(b['timestamp'] ?? '') ?? DateTime.now();
-              return timeB.compareTo(timeA);
-            });
-            return Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1F1F1F),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-              ),
-              child: Column(
-                children: [
-                  // Top row with title and Cancel button.
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Comments",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          "Cancel",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      controller: scrollController,
-                      itemCount: commentsList.length,
-                      itemBuilder: (context, index) {
-                        final comment = commentsList[index];
-                        return ListTile(
-                          title: Text(
-                            comment['author'] ?? "Anonymous",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          subtitle: Text(
-                            comment['content'] ?? "",
-                            style: const TextStyle(color: Color(0xFFD1D1D1)),
-                          ),
-                          trailing: Text(
-                            comment['timestamp'] ?? "",
-                            style: const TextStyle(
-                                color: Color(0xFFB0B0B0), fontSize: 10),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: commentController,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: "Add a comment...",
-                            hintStyle:
-                                const TextStyle(color: Color(0xFFB0B0B0)),
-                            filled: true,
-                            fillColor: const Color(0xFF323232),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey[800]!),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: const Color(0xFF5BC0EB)),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF5BC0EB),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () async {
-                          final commentContent = commentController.text.trim();
-                          if (commentContent.isNotEmpty) {
-                            await _postsRef
-                                .child(postId)
-                                .child("comments")
-                                .push()
-                                .set({
-                              "author": FirebaseAuth
-                                      .instance.currentUser?.displayName ??
-                                  "Anonymous",
-                              "content": commentContent,
-                              "timestamp": DateTime.now().toIso8601String(),
-                            });
-                            commentController.clear();
-                          }
-                        },
-                        child: const Text("Send"),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  /// Opens a dialog to share the post content via WhatsApp or Email.
-  void _handleShare(String content) {
-    // Replace the localized map with your localization logic if needed.
-    Map<String, String> localized = {
-      "shareChat": "Share Chat",
-      "shareChatContent": "Share this chat with others",
-      "shareViaWA": "Share via Whatsapp",
-      "enterWANumber": "Enter WhatsApp no",
-      "shareViaEmail": "Share via Email",
-      "enterEmail": "Enter email",
-    };
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF1F1F1F),
-          title: Text(
-            localized["shareChat"] ?? "Share Chat",
-            style: const TextStyle(color: Colors.white),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                localized["shareChatContent"] ?? "Share this chat with others",
-                style: const TextStyle(color: Color(0xFFD1D1D1)),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _exportWAController,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: InputDecoration(
-                  labelText: localized["shareViaWA"] ?? "Share via Whatsapp",
-                  hintText: localized["enterWANumber"] ?? "Enter WhatsApp no",
-                  prefixIcon: const Icon(Icons.message_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _exportEmailController,
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(' '))
-                ],
-                decoration: InputDecoration(
-                  labelText: localized["shareViaEmail"] ?? "Share via Email",
-                  hintText: localized["enterEmail"] ?? "Enter email",
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: const Color(0xFF5BC0EB),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text(
-                      "Cancel",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: const Color(0xFF5BC0EB),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () async {
-                      final String waNumber = _exportWAController.text.trim();
-                      final String email = _exportEmailController.text.trim();
-
-                      // Check if at least one contact method is provided
-                      if (waNumber.isEmpty && email.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text(
-                                  "Please enter a Whatsapp no or an Email")),
-                        );
-                        return;
-                      }
-
-                      // Share via WhatsApp if a number is provided
-                      if (waNumber.isNotEmpty) {
-                        final String message = Uri.encodeComponent(
-                            "Hello, I wanted to share this chat with you.\n\n$content");
-                        final String waUrl =
-                            "https://wa.me/$waNumber?text=$message";
-
-                        if (await canLaunch(waUrl)) {
-                          await launch(waUrl);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Could not launch WhatsApp")),
-                          );
-                        }
-                      }
-
-                      // Share via Email if an email address is provided
-                      if (email.isNotEmpty) {
-                        final String subject =
-                            Uri.encodeComponent("Chat Share");
-                        final String body = Uri.encodeComponent(
-                            "Hello, I wanted to share this chat with you.\n\n$content");
-                        final String emailUrl =
-                            "mailto:$email?subject=$subject&body=$body";
-
-                        if (await canLaunch(emailUrl)) {
-                          await launch(emailUrl);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Could not launch Email client")),
-                          );
-                        }
-                      }
-
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text(
-                      "Send",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// Builds the widget for a single post card.
-  Widget _buildPostCard(String postId, Map<dynamic, dynamic> postData) {
-    // Use the user's name from FirebaseAuth if available.
-    final author = postData['author'] ??
-        FirebaseAuth.instance.currentUser?.displayName ??
-        'Unknown';
-    final content = postData['content'] ?? '';
-    final timestamp = postData['timestamp'] ?? '';
-    final likes = postData['likes'] ?? 0;
-    final media = postData['media'] ?? "";
-    final mediaType = postData['mediaType'] ?? "";
-
-    return InkWell(
-      onTap: () => _openCommentSheet(postId, postData),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF1F1F1F),
-          border: Border.all(color: Colors.grey[800]!),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Top row: Avatar, author, and timestamp.
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: const Color(0xFF323232),
-                    child: Text(
-                      author.isNotEmpty ? author[0].toUpperCase() : '?',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          author,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          timestamp,
-                          style: const TextStyle(
-                            color: Color(0xFFB0B0B0),
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                content,
-                style: const TextStyle(
-                  color: Color(0xFFD1D1D1),
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 12),
-              // Display media if available.
-              media != ""
-                  ? mediaType == "image"
-                      ? Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          child: Image.memory(
-                            base64Decode(media),
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Text(
-                                "Error loading image",
-                                style: TextStyle(color: Colors.red),
-                              );
-                            },
-                          ),
-                        )
-                      : mediaType == "video"
-                          ? Container(
-                              margin: const EdgeInsets.only(bottom: 12),
-                              child: VideoPlayerWidget(mediaBase64: media),
-                            )
-                          : const SizedBox.shrink()
-                  : const SizedBox.shrink(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // Like button.
-                  InkWell(
-                    onTap: () => _handleLike(postId, likes),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.thumb_up_alt_outlined,
-                            size: 20, color: Color(0xFFB0B0B0)),
-                        const SizedBox(width: 4),
-                        Text(
-                          "Like ($likes)",
-                          style: const TextStyle(
-                            color: Color(0xFFB0B0B0),
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Comment button.
-                  InkWell(
-                    onTap: () => _openCommentSheet(postId, postData),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.comment_outlined,
-                            size: 20, color: Color(0xFFB0B0B0)),
-                        SizedBox(width: 4),
-                        Text(
-                          "Comment",
-                          style: TextStyle(
-                            color: Color(0xFFB0B0B0),
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Share button.
-                  InkWell(
-                    onTap: () => _handleShare(content),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.share_outlined,
-                            size: 20, color: Color(0xFFB0B0B0)),
-                        SizedBox(width: 4),
-                        Text(
-                          "Share",
-                          style: TextStyle(
-                            color: Color(0xFFB0B0B0),
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-*/
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/services.dart'; // For FilteringTextInputFormatter
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+import 'package:reward_popup/reward_popup.dart';
 import 'package:path_provider/path_provider.dart';
 
-// FeedPage now accepts a language index from the parent.
+
 class FeedPage extends StatefulWidget {
   final int languageIndex;
   const FeedPage({Key? key, required this.languageIndex}) : super(key: key);
@@ -744,9 +20,6 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-  // Mapping of keys to a map of translations.
-  // Each language index (0 to 15) corresponds to a specific language.
-  // The values here are dummy translations that prepend the language name.
   final Map<String, Map<int, String>> localizedTexts = {
     "createPost": {
       0: "پوسٹ بنائیں", // Kashmiri (in Perso-Arabic script)
@@ -1308,32 +581,422 @@ class _FeedPageState extends State<FeedPage> {
       15: "404 Error: Not Found",
     },
   };
+  int coinBalance = 0;
 
-  /// Helper method to get the localized text for a given key.
   String getText(String key) {
     return localizedTexts[key]?[widget.languageIndex] ??
         localizedTexts[key]?[15] ??
         "";
   }
 
-  // Firebase Realtime Database reference.
   final DatabaseReference _postsRef = FirebaseDatabase.instance.ref('posts');
-
-  // Controller for the post text field.
   final TextEditingController _postController = TextEditingController();
-
-  // Controllers for share dialog.
   final TextEditingController _exportWAController = TextEditingController();
   final TextEditingController _exportEmailController = TextEditingController();
-
-  // Variables to store the media (image/video) in Base64 format and media type.
   String? _mediaBase64;
   String? _mediaType;
-
-  // Set to track which posts the user has liked (simulate one like per user).
   final Set<String> _likedPosts = {};
+  final Map<String, List<String>> translations1 = {
+    'enterJoinCode': [
+      // Kashmiri (using a style similar to Urdu)
+      'جوٚن کوڈ داخل کریں',
+      // Punjabi (Gurmukhi)
+      'ਜੋੜਨ ਕੋਡ ਦਰਜ ਕਰੋ',
+      // Haryanvi (similar to Hindi)
+      'जॉइन कोड भरें',
+      // Hindi
+      'जॉइन कोड दर्ज करें',
+      // Rajasthani
+      'जॉइन कोड डालो',
+      // Bhojpuri
+      'जॉइन कोड दर्ज करीं',
+      // Bengali
+      'যোগ কোড লিখুন',
+      // Gujarati
+      'જોઈન કોડ દાખલ કરો',
+      // Assamese
+      'যোগ কোড প্ৰৱেশ কৰক',
+      // Odia
+      'ଜୋଇନ୍ କୋଡ୍ ପ୍ରବେଶ କରନ୍ତୁ',
+      // Marathi
+      'जॉइन कोड प्रविष्ट करा',
+      // Tamil
+      'சேரும் குறியீட்டை உள்ளிடவும்',
+      // Telugu
+      'జాయిన్ కోడ్ నమోదు చేయండి',
+      // Kannada
+      'ಜೋನ್ ಕೋಡ್ ನಮೂದಿಸಿ',
+      // Malayalam
+      'ജോയിൻ കോഡ് നൽകുക',
+      // English
+      'Enter Join Code',
+    ],
+    'cancel': [
+      'کینسل کریں',
+      'ਰੱਦ ਕਰੋ',
+      'रद्द कर दे',
+      'रद्द करें',
+      'रद्द करो',
+      'रद्द करीं',
+      'বাতিল করুন',
+      'રદ્દ કરો',
+      'বাতিল কৰক',
+      'ବାତିଲ୍ କରନ୍ତୁ',
+      'रद्द करा',
+      'ரத்து செய்',
+      'రద్దు చేయండి',
+      'ರದ್ದುಮಾಡಿ',
+      'റദ്ദാക്കുക',
+      'Cancel',
+    ],
+    'join': [
+      'جوٚن کریں',
+      'ਜੋੜੋ',
+      'जॉइन हो',
+      'शामिल हों',
+      'जॉइन करो',
+      'जॉइन करीं',
+      'যোগ দিন',
+      'જોઇન કરો',
+      'যোগ দিন',
+      'ଯୋଗ ଦିଅନ୍ତୁ',
+      'जॉइन करा',
+      'சேரவும்',
+      'జాయిన్ అవ్వండి',
+      'ಜೋನ್ ಮಾಡಿ',
+      'ചേർക്കുക',
+      'Join',
+    ],
+    'incorrectJoinCode': [
+      'غلط جوٚن کوڈ.',
+      'ਗਲਤ ਜੋੜਨ ਕੋਡ।',
+      'गलत जॉइन कोड।',
+      'गलत जॉइन कोड।',
+      'गलत जॉइन कोड।',
+      'गलत जॉइन कोड।',
+      'ভুল যোগ কোড।',
+      'ખોટો જોડાણ કોડ.',
+      'ভুল যোগ কোড।',
+      'ଭୁଲ୍ ଜୋଇନ୍ କୋଡ୍।',
+      'चुकीचा जॉइन कोड.',
+      'தவறான சேரும் குறியீடு.',
+      'తప్పు జాయిన్ కోడ్.',
+      'ತಪ್ಪು ಜೋನ್ ಕೋಡ್.',
+      'തെറ്റായ ജോയിൻ കോഡ്.',
+      'Incorrect join code.',
+    ],
+    'createCommunity': [
+      'کمیونٹی تشکیل دیں',
+      'ਕਮਿਊਨਿਟੀ ਬਣਾਓ',
+      'समुदाय बनाओ',
+      'समुदाय बनाएँ',
+      'समुदाय बनाओ',
+      'समुदाय बनाईं',
+      'কমিউনিটি তৈরি করুন',
+      'સમુદાય બનાવો',
+      'সম্প্ৰদায় সৃষ্টি কৰক',
+      'ସମୁଦାୟ ସೃଜନ କରନ୍ତୁ',
+      'समुदाय तयार करा',
+      'சமூகத்தை உருவாக்கு',
+      'సమూహాన్ని సృష్టించండి',
+      'ಸಮುದಾಯವನ್ನು ರಚಿಸಿ',
+      'സമൂഹം സൃഷ്ടിക്കുക',
+      'Create Community',
+    ],
+    'name': [
+      'نام',
+      'ਨਾਂ',
+      'नाम',
+      'नाम',
+      'नाम',
+      'नाम',
+      'নাম',
+      'નામ',
+      'নাম',
+      'ନାମ',
+      'नाव',
+      'பெயர்',
+      'పేరు',
+      'ಹೆಸರು',
+      'പേര്',
+      'Name',
+    ],
+    'enterName': [
+      'ایک نام داخل کریں',
+      'ਇੱਕ ਨਾਮ ਦਰਜ ਕਰੋ',
+      'एक नाम भरें',
+      'एक नाम दर्ज करें',
+      'एक नाम डालो',
+      'एक नाम दर्ज करीं',
+      'একটি নাম লিখুন',
+      'એક નામ દાખલ કરો',
+      'এখন নাম প্ৰৱেশ কৰক',
+      'ଏକ ନାମ ପ୍ରବେଶ କରନ୍ତୁ',
+      'एक नाव प्रविष्ट करा',
+      'ஒரு பெயரை உள்ளிடவும்',
+      'ఒక పేరు నమోదు చేయండి',
+      'ಒಂದು ಹೆಸರನ್ನು ನಮೂದಿಸಿ',
+      'ഒരു പേര് നൽകുക',
+      'Enter a name',
+    ],
+    'description': [
+      'تفصیل',
+      'ਵੇਰਵਾ',
+      'विवरण',
+      'विवरण',
+      'विवरण',
+      'विवरण',
+      'বর্ণনা',
+      'વર્ણન',
+      'বিৱৰণ',
+      'ବର୍ଣ୍ଣନା',
+      'वर्णन',
+      'விவரம்',
+      'వివరణ',
+      'ವಿವರಣೆ',
+      'വിവരണം',
+      'Description',
+    ],
+    'enterDescription': [
+      'ایک تفصیل داخل کریں',
+      'ਇੱਕ ਵੇਰਵਾ ਦਰਜ ਕਰੋ',
+      'एक विवरण भरें',
+      'एक विवरण दर्ज करें',
+      'एक विवरण डालो',
+      'एक विवरण दर्ज करीं',
+      'একটি বর্ণনা লিখুন',
+      'એક વર્ણન દાખલ કરો',
+      'এখন বিৱৰণ প্ৰৱেশ কৰক',
+      'ଏକ ବର୍ଣ୍ଣନା ପ୍ରବେଶ କରନ୍ତୁ',
+      'एक वर्णन प्रविष्ट करा',
+      'ஒரு விவரத்தை உள்ளிடவும்',
+      'ఒక వివరణ నమోదు చేయండి',
+      'ಒಂದು ವಿವರಣೆಯನ್ನು ನಮೂದಿಸಿ',
+      'ഒരു വിവരണം നൽകുക',
+      'Enter a description',
+    ],
+    'selectImage': [
+      'تصویر منتخب کریں',
+      'ਤਸਵੀਰ ਚੁਣੋ',
+      'चित्र चुनो',
+      'चित्र चुनें',
+      'चित्र चुनो',
+      'चित्र चुनल जाव',
+      'ছবি নির্বাচন করুন',
+      'છબી પસંદ કરો',
+      'চিত্ৰ বাচক কৰক',
+      'ଛବି ବାଛନ୍ତୁ',
+      'प्रतिमा निवडा',
+      'படத்தை தேர்ந்தெடுக்கவும்',
+      'చిత్రాన్ని ఎంచుకోండి',
+      'ಚಿತ್ರ ಆಯ್ಕೆಮಾಡಿ',
+      'ചിത്രം തിരഞ്ഞെടുക്കുക',
+      'Select Image',
+    ],
+    'publicCommunity': [
+      'عوامی کمیونٹی',
+      'ਸਾਰਵਜਨਿਕ ਕਮਿਊਨਿਟੀ',
+      'सार्वजनिक समुदाय',
+      'सार्वजनिक समुदाय',
+      'सार्वजनिक समुदाय',
+      'सार्वजनिक समुदाय',
+      'সার্বজনীন কমিউনিটি',
+      'જાહેર સમુદાય',
+      'সাৰ্বজনীন সম্প্ৰদায়',
+      'ସାର୍ବଜନୀନ ସମୁଦାୟ',
+      'सार्वजनिक समुदाय',
+      'பொது சமூக',
+      'ప్రజా సంఘం',
+      'ಸಾರ್ವಜನಿಕ ಸಮುದಾಯ',
+      'പൊതു സമൂഹം',
+      'Public Community',
+    ],
+    'enterJoinCodeInvite': [
+      'صرف دعوتی کمیونٹی کے لیے جوٚن کوڈ داخل کریں',
+      'ਨਿਮੰਤ੍ਰਿਤ ਸਮੁਦਾਇ ਲਈ ਜੋੜਨ ਕੋਡ ਦਰਜ ਕਰੋ',
+      'निमंत्रण वाली समुदाय के लिए जॉइन कोड दर्ज करें',
+      'निमंत्रण-केवल समुदाय के लिए जॉइन कोड दर्ज करें',
+      'निमंत्रण-केवल समुदाय के लिए जॉइन कोड डालो',
+      'निमंत्रण-केवल समुदाय खातिर जॉइन कोड दर्ज करीं',
+      'ইনভাইট-ওনলি কমিউনিটির জন্য যোগ কোড লিখুন',
+      'નિમંત્રણ પર આધારિત સમુદાય માટે જોડાણ કોડ દાખલ કરો',
+      'অহ্বানৰ বাবে বিশেষ সম্প্ৰদায়ৰ বাবে যোগ কোড প্ৰৱেশ কৰক',
+      'ମାତ୍ର ଆମନ୍ତ୍ରିତ ସମୁଦାୟ ପାଇଁ ଜୋଇନ୍ କୋଡ୍ ପ୍ରବେଶ କରନ୍ତୁ',
+      'फक्त निमंत्रणासाठीच्या समुदायासाठी जॉइन कोड प्रविष्ट करा',
+      'அழைப்புக்கேற்ப சமூகத்திற்கு சேரும் குறியீட்டை உள்ளிடவும்',
+      'ఆహ్వానితుల కోసం మాత్రమే ఉన్న కమ్యూనిటీకి జాయిన్ కోడ్ నమోదు చేయండి',
+      'ಅಹ್ವಾನಿತ ಸಮುದಾಯಕ್ಕೆ ಸೇರಲು ಕೋಡ್ ನಮೂದಿಸಿ',
+      'ആഹ്വാനമുള്ള സമുദായത്തിനുള്ള ജോയിൻ കോഡ് നൽകുക',
+      'Enter a join code for invite-only community',
+    ],
+    'create': [
+      'تخلیق کریں',
+      'ਬਣਾਓ',
+      'बनाओ',
+      'बनाएँ',
+      'बनाओ',
+      'बनाईं',
+      'তৈরি করুন',
+      'બણાવો',
+      'সৃষ্টি কৰক',
+      'ତିଆରି କରନ୍ତୁ',
+      'तयार करा',
+      'உருவாக்கு',
+      'సృష్టించండి',
+      'ರಚಿಸಿ',
+      'സൃഷ്ടിക്കുക',
+      'Create',
+    ],
+    'joined': [
+      'شامل ہو گئے',
+      'ਸ਼ਾਮਿਲ ਹੋ ਚੁੱਕੇ',
+      'शामिल हो गए',
+      'शामिल हो गए',
+      'शामिल हो गए',
+      'जॉइन हो गइल',
+      'যোগদান করা হয়েছে',
+      'જોડાયા',
+      'যোগদান কৰা হৈছে',
+      'ଜୋଡି ହୋଇଛି',
+      'जॉइन झाले',
+      'சேர்ந்துவிட்டது',
+      'చేరినది',
+      'ಸೇರಿದೆ',
+      'ചേര്‍ന്നു',
+      'JOINED',
+    ],
+    'userNotLoggedIn': [
+      'یوزر لاگ ان نہ ہوٙ',
+      'ਵਰਤੋਂਕਾਰ ਲਾਗਿਨ ਨਹੀਂ ਕੀਤਾ।',
+      'यूजर लॉग इन नहीं है।',
+      'उपयोगकर्ता लॉग इन नहीं है।',
+      'यूजर लॉग इन नहीं है।',
+      'यूजर लॉग इन नइखे।',
+      'ব্যবহারকারী লগ ইন করেনি।',
+      'વપરાશકર્તા લોગિન નથી',
+      'ব্যৱহাৰকাৰী লগ ইন কৰা নাই।',
+      'ଉପଭୋକ୍ତା ଲଗଇନ୍ କରିନାହାନ୍ତି',
+      'वापरकर्ता लॉग इन नाही आहे.',
+      'பயனர் உள்நுழையவில்லை.',
+      'వాడుకరి లాగిన్ కాలేదు.',
+      'ಬಳಕೆದಾರ ಲಾಗಿನ್ ಆಗಿಲ್ಲ.',
+      'ഉപയോക്താവ് ലോഗിൻ ചെയ്തിട്ടില്ല.',
+      'User not logged in.',
+    ],
+    'noCommunitiesAvailable': [
+      'کوئی کمیونٹی دستیاب نہیں',
+      'ਕੋਈ ਕਮਿਊਨਿਟੀ ਉਪਲਬਧ ਨਹੀਂ',
+      'कोई समुदाय उपलब्ध नहीं है',
+      'कोई समुदाय उपलब्ध नहीं है',
+      'कोई समुदाय उपलब्ध नहीं है',
+      'कवनो समुदाय उपलब्ध नइखे',
+      'কোনও কমিউনিটি উপলব্ধ নয়',
+      'કોઈ સમુદાય ઉપલબ્ધ નથી',
+      'কোনো সম্প্ৰদায় উপলব্ধ নাই',
+      'କୌଣସି ସମୁଦାୟ ଉପଲବ୍ଧ ନୁହେଁ',
+      'कोणतेही समुदाय उपलब्ध नाहीत',
+      'எந்த சமூகமும் இல்லை',
+      'ఏ కమ్యూనిటీ లభ్యం లేదు',
+      'ಯಾವುದೇ ಸಮುದಾಯ ಲಭ್ಯವಿಲ್ಲ',
+      'ഏതെങ്കിലും സമൂഹം ലഭ്യമല്ല',
+      'No communities available',
+    ],
+    'noCommunitiesFound': [
+      'کوئی کمیونٹی نہیں ملی',
+      'ਕੋਈ ਕਮਿਊਨਿਟੀ ਨਹੀਂ ਮਿਲੀ',
+      'कोई समुदाय नहीं मिला',
+      'कोई समुदाय नहीं मिला',
+      'कोई समुदाय नहीं मिला',
+      'कवनो समुदाय ना मिलल',
+      'কোনও কমিউনিটি পাওয়া যায়নি',
+      'કોઈ સમુદાય મળ્યો નથી',
+      'কোনো সম্প্ৰদায় পোৱা নগল',
+      'କୌଣସି ସମୁଦାୟ ମିଳିନାହିଁ',
+      'कोणतेही समुदाय सापडले नाहीत',
+      'எந்த சமூகமும் கிடைக்கவில்லை',
+      'ఏ కమ్యూనిటీ కనబడలేదు',
+      'ಯಾವುದೇ ಸಮುದಾಯ ಕಂಡುಬಂದಿಲ್ಲ',
+      'ഏതെങ്കിലും സമൂഹം കണ്ടെത്തിയിട്ടില്ല',
+      'No communities found',
+    ],
+  };
 
-  /// Opens the bottom sheet for creating a new post.
+
+
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+  String getLanguageFromIndex(int index) {
+    switch (index) {
+      case 0:
+        return "कश्मीरी";
+      case 1:
+        return "ਪੰਜਾਬੀ";
+      case 2:
+        return "हरियाणवी";
+      case 3:
+        return "हिन्दी";
+      case 4:
+        return "राजस्थानी";
+      case 5:
+        return "भोजपुरी";
+      case 6:
+        return "বাংলা";
+      case 7:
+        return "ગુજરાતી";
+      case 8:
+        return "অসমীয়া";
+      case 9:
+        return "ଓଡ଼ିଆ";
+      case 10:
+        return "मराठी";
+      case 11:
+        return "தமிழ்";
+      case 12:
+        return "తెలుగు";
+      case 13:
+        return "ಕನ್ನಡ";
+      case 14:
+        return "മലയാളം";
+      case 15:
+      default:
+        return "English";
+    }
+  }
+  String _tr(String key, {Map<String, String>? params}) {
+    final translations1 = localizedTexts[key];
+    String lang=getLanguageFromIndex(widget.languageIndex);
+    String translated = translations1?[lang] ?? translations1?["English"] ?? key;
+    if (params != null) {
+      params.forEach((paramKey, paramValue) {
+        translated = translated.replaceAll('{$paramKey}', paramValue);
+      });
+    }
+    return translated;
+  }
+  Future<void> _loadUserData() async {
+    final String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
+    if (userId.isEmpty) {
+      debugPrint("User is not authenticated.");
+      return;
+    }
+
+    final DatabaseReference userRef =
+    FirebaseDatabase.instance.ref().child('users').child(userId);
+    final DataSnapshot snapshot = await userRef.get();
+    if (snapshot.exists) {
+      final data = snapshot.value as Map;
+      setState(() {
+        coinBalance = data['coins'] != null ? int.parse(data['coins'].toString()) : 0;
+      });
+    } else {
+      setState(() {
+        coinBalance = 0;
+      });
+      await userRef.set({'coins': 0});
+    }
+  }
   void _openNewPostSheet() {
     showModalBottomSheet(
       context: context,
@@ -1395,7 +1058,8 @@ class _FeedPageState extends State<FeedPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: const Color(0xFF5BC0EB)),
+                        borderSide:
+                        BorderSide(color: const Color(0xFF5BC0EB)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -1439,9 +1103,9 @@ class _FeedPageState extends State<FeedPage> {
                       onPressed: () async {
                         final content = _postController.text.trim();
                         if (content.isNotEmpty || _mediaBase64 != null) {
+                          // Create the post in Firebase.
                           await _postsRef.push().set({
-                            "author": FirebaseAuth
-                                    .instance.currentUser?.displayName ??
+                            "author": FirebaseAuth.instance.currentUser?.displayName ??
                                 "Unknown",
                             "content": content,
                             "timestamp": DateTime.now().toIso8601String(),
@@ -1450,12 +1114,27 @@ class _FeedPageState extends State<FeedPage> {
                             "media": _mediaBase64 ?? "",
                             "mediaType": _mediaType ?? ""
                           });
+
+                          // Define the coins that will be awarded.
+                          int coinsAwarded = 10;
+
+                          // Trigger coin awarding.
+                          await _awardCoins(coinsAwarded);
+
+                          // Clean up the post sheet data.
                           _postController.clear();
                           setState(() {
                             _mediaBase64 = null;
                             _mediaType = null;
                           });
+
+                          // Close the bottom sheet.
                           Navigator.pop(context);
+
+                          // Trigger coin reward popup after bottom sheet is closed.
+                          Future.delayed(const Duration(milliseconds: 200), () {
+                            _showCoinPopup(coinsAwarded);
+                          });
                         }
                       },
                       child: Text(getText("post")),
@@ -1470,6 +1149,75 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
+  Future<void> _awardCoins(int coins) async {
+    setState(() {
+      coinBalance += coins;
+    });
+    final String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
+    final DatabaseReference ref =
+    FirebaseDatabase.instance.ref().child('users').child(userId);
+    await ref.update({'coins': coinBalance});
+  }
+  void _showCoinPopup(int coinsAwarded) async {
+    await showRewardPopup<String>(
+      context,
+      backgroundColor: Colors.transparent,
+      child: Center(
+        child: Container(
+          width: 300,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1F1F1F),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.monetization_on,
+                size: 80,
+                color: Colors.amber,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                _tr('Congratulations!'),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _tr('You have received {coins} coins!',
+                    params: {"coins": coinsAwarded.toString()}),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Color(0xFFD1D1D1),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF5BC0EB),
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  _tr('Awesome!'),
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
   /// Opens the file picker using ImagePicker in a bottom sheet.
   Future<void> _pickMedia() async {
     showModalBottomSheet(
@@ -1555,7 +1303,6 @@ class _FeedPageState extends State<FeedPage> {
     });
   }
 
-  /// Opens the comment sheet where users can view and add comments.
   void _openCommentSheet(String postId, Map<dynamic, dynamic> postData) {
     final TextEditingController commentController = TextEditingController();
     showModalBottomSheet(
@@ -1708,7 +1455,7 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  /// Opens a dialog to share the post content via WhatsApp or Email.
+
   void _handleShare(String content) {
     showDialog(
       context: context,
@@ -1853,7 +1600,6 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  /// Builds the widget for a single post card.
   Widget _buildPostCard(String postId, Map<dynamic, dynamic> postData) {
     // Use the user's name from FirebaseAuth if available.
     final author = postData['author'] ??
@@ -2017,7 +1763,6 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  /// Main build method.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -2102,7 +1847,6 @@ class _FeedPageState extends State<FeedPage> {
   }
 }
 
-/// A helper function to return a basic InputDecoration.
 InputDecoration textFormDecoration(String label, String hint, IconData icon,
     {required BuildContext context}) {
   return InputDecoration(
@@ -2111,9 +1855,6 @@ InputDecoration textFormDecoration(String label, String hint, IconData icon,
     prefixIcon: Icon(icon, color: Theme.of(context).primaryColor),
   );
 }
-
-/// A widget that plays a video from Base64 data.
-
 class VideoPlayerWidget extends StatefulWidget {
   final String mediaBase64;
   const VideoPlayerWidget({Key? key, required this.mediaBase64})
@@ -2181,3 +1922,5 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     );
   }
 }
+
+

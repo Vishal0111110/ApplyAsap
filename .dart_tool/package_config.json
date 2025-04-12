@@ -21,7 +21,7 @@
     },
     {
       "name": "archive",
-      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/archive-4.0.5",
+      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/archive-3.6.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -108,6 +108,18 @@
       "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/chat_bubbles-1.6.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "checked_yaml",
+      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/checked_yaml-2.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "cli_util",
+      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/cli_util-0.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
     },
     {
       "name": "clock",
@@ -368,6 +380,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "flutter_launcher_icons",
+      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_launcher_icons-0.13.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "flutter_lints",
       "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2",
       "packageUri": "lib/",
@@ -477,9 +495,9 @@
     },
     {
       "name": "image",
-      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/image-4.5.4",
+      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/image-4.3.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.15"
     },
     {
       "name": "image_picker",
@@ -570,6 +588,12 @@
       "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "lottie",
+      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/lottie-2.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
     },
     {
       "name": "markdown",
@@ -692,8 +716,8 @@
       "languageVersion": "3.0"
     },
     {
-      "name": "posix",
-      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/posix-6.0.1",
+      "name": "reward_popup",
+      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/reward_popup-0.0.7",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -1040,13 +1064,19 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "yaml",
+      "rootUri": "file:///C:/Users/buyya/AppData/Local/Pub/Cache/hosted/pub.dev/yaml-3.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "career_rec",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2025-04-05T13:30:31.175459Z",
+  "generated": "2025-04-12T06:53:22.691547Z",
   "generator": "pub",
   "generatorVersion": "3.5.4",
   "flutterRoot": "file:///C:/src/flutter_windows_3.24.4-stable/flutter",

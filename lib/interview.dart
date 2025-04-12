@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'question_data.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-/// Returns the language index based on the given language string.
 int getLanguageIndex(String lang) {
   switch (lang) {
     case "कश्मीरी":
@@ -1051,7 +1050,7 @@ class _InterviewPageState extends State<InterviewPage> {
                       ? Center(
                     child: SpinKitPouringHourGlassRefined(
                       color: const Color(0xFF5BC0EB), // Accent color for spinner
-                      size: 120,
+                      size: 100,
                     ),
                   )
                       : FutureBuilder(
@@ -1064,7 +1063,7 @@ class _InterviewPageState extends State<InterviewPage> {
                         return Center(
                           child: SpinKitPouringHourGlassRefined(
                             color: const Color(0xFF5BC0EB), // Accent color for spinner
-                            size: 120,
+                            size: 100,
                           ),
                         );
                       }
@@ -1125,7 +1124,7 @@ class _InterviewPageState extends State<InterviewPage> {
                     ? Center(
                   child: SpinKitPouringHourGlassRefined(
                     color: const Color(0xFF5BC0EB), // Accent color for spinner
-                    size: 120,
+                    size: 100,
                   ),
                 )
                     : Column(
