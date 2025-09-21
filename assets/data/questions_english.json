@@ -1,0 +1,113 @@
+{
+  "titles": [
+    "Which industries are you interested in?",
+    "Which skills best represent your strengths or areas to improve?",
+    "What is your current experience level?",
+    "What type of employment are you looking for?",
+    "What is your preferred work environment?",
+    "What is your desired salary range?",
+    "What is your job location preference?",
+    "How many years of professional experience do you have?",
+    "What size company do you prefer to work for?",
+    "What are your primary career goals?"
+  ],
+  "options": [
+    [
+      "Technology",
+      "Finance",
+      "Healthcare",
+      "Education",
+      "Business Services",
+      "Engineering",
+      "Retail",
+      "Hospitality",
+      "Manufacturing",
+      "Consulting",
+      "Non-profit",
+      "Government",
+      "Entertainment",
+      "Other"
+    ],
+    [
+      "Coding",
+      "Project Management",
+      "Data Analysis",
+      "Sales",
+      "Customer Service",
+      "Marketing",
+      "Design",
+      "Communication",
+      "Leadership",
+      "Problem Solving",
+      "Teamwork",
+      "Creative Thinking",
+      "Negotiation",
+      "Other"
+    ],
+    [
+      "Entry Level",
+      "Mid Level",
+      "Senior Level",
+      "Manager/Executive"
+    ],
+    [
+      "Full-time",
+      "Part-time",
+      "Contract",
+      "Temporary",
+      "Internship",
+      "Freelance",
+      "Remote",
+      "On-site",
+      "Hybrid"
+    ],
+    [
+      "Corporate",
+      "Startup",
+      "Freelance",
+      "Remote",
+      "Hybrid",
+      "Other"
+    ],
+    [
+      "Below 30k",
+      "30k-50k",
+      "50k-70k",
+      "70k-100k",
+      "Above 100k",
+      "Negotiable"
+    ],
+    [
+      "Local",
+      "Willing to relocate",
+      "Remote",
+      "No preference"
+    ],
+    [
+      "0-1 years",
+      "2-3 years",
+      "4-6 years",
+      "7-10 years",
+      "10+ years"
+    ],
+    [
+      "Startup (1-50 employees)",
+      "Small (50-200)",
+      "Medium (200-1000)",
+      "Large (1000+)",
+      "No preference"
+    ],
+    [
+      "Career advancement",
+      "Skill development",
+      "Work-life balance",
+      "Entrepreneurship",
+      "Networking opportunities",
+      "High compensation",
+      "Job stability",
+      "Leadership roles",
+      "Innovative projects",
+      "Other"
+    ]
+  ]
+}

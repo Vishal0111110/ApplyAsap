@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="notification_color">#FF5BC0EB</color>
+    <color name="notification_icon_color">#FF5BC0EB</color>
+
+    <!-- Notification Channel Colors -->
+    <color name="notification_channel_color">#FF5BC0EB</color>
+    <color name="notification_channel_light_color">#FF5BC0EB</color>
+
+    <!-- WhatsApp Style Notification Colors -->
+    <color name="whatsapp_primary">#FF5BC0EB</color>
+    <color name="whatsapp_accent">#FF5BC0EB</color>
+</resources>

@@ -1,0 +1,214 @@
+{
+  "items": [
+    {
+      "itemId": "cat_001",
+      "category": "verbal",
+      "type": 0,
+      "content": {
+        "question": "What is the synonym of 'ubiquitous'?",
+        "options": ["A. Rare", "B. Present everywhere", "C. Ancient", "D. Hidden"]
+      },
+      "parameters": {
+        "a": 1.2,
+        "b": 0.5,
+        "c": 0.2
+      },
+      "difficulty": 0.5,
+      "discrimination": 1.2,
+      "guessing": 0.2,
+      "correctResponses": ["B"],
+      "distractors": ["A", "C", "D"],
+      "metadata": {
+        "topic": "vocabulary",
+        "language": "english"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "cat_002",
+      "category": "numerical",
+      "type": 0,
+      "content": {
+        "question": "If 3x - 7 = 11, what is x?",
+        "options": ["A. 4", "B. 6", "C. 5", "D. 7"]
+      },
+      "parameters": {
+        "a": 1.0,
+        "b": -0.2,
+        "c": 0.25
+      },
+      "difficulty": -0.2,
+      "discrimination": 1.0,
+      "guessing": 0.25,
+      "correctResponses": ["B"],
+      "distractors": ["A", "C", "D"],
+      "metadata": {
+        "topic": "algebra",
+        "language": "english"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "cat_003",
+      "category": "logical",
+      "type": 0,
+      "content": {
+        "question": "Which number comes next in the sequence: 2, 5, 10, 17, ...?",
+        "options": ["A. 24", "B. 26", "C. 28", "D. 30"]
+      },
+      "parameters": {
+        "a": 0.8,
+        "b": 1.5,
+        "c": 0.15
+      },
+      "difficulty": 1.5,
+      "discrimination": 0.8,
+      "guessing": 0.15,
+      "correctResponses": ["B"],
+      "distractors": ["A", "C", "D"],
+      "metadata": {
+        "topic": "sequences",
+        "language": "english"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "cat_004",
+      "category": "spatial",
+      "type": 0,
+      "content": {
+        "question": "If you fold this 3x3 grid in half, which shape do you get?",
+        "options": ["A. Square", "B. Circle", "C. Triangle", "D. Rectangle"],
+        "diagram": "3x3 grid with center highlighted"
+      },
+      "parameters": {
+        "a": 0.9,
+        "b": 0.8,
+        "c": 0.1
+      },
+      "difficulty": 0.8,
+      "discrimination": 0.9,
+      "guessing": 0.1,
+      "correctResponses": ["A"],
+      "distractors": ["B", "C", "D"],
+      "metadata": {
+        "topic": "geometric reasoning",
+        "language": "english"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "cat_005",
+      "category": "verbal",
+      "type": 0,
+      "content": {
+        "question": "Choose the odd word: Cat, Dog, Cow, Duck",
+        "options": ["A. Cat", "B. Dog", "C. Cow", "D. Duck"]
+      },
+      "parameters": {
+        "a": 0.7,
+        "b": -0.7,
+        "c": 0.3
+      },
+      "difficulty": -0.7,
+      "discrimination": 0.7,
+      "guessing": 0.3,
+      "correctResponses": ["A"],
+      "distractors": ["B", "C", "D"],
+      "metadata": {
+        "topic": "odd one out",
+        "language": "english"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "cat_006",
+      "category": "numerical",
+      "type": 0,
+      "content": {
+        "question": "What percentage is 3 out of 15?",
+        "options": ["A. 15%", "B. 20%", "C. 25%", "D. 30%"]
+      },
+      "parameters": {
+        "a": 0.6,
+        "b": -1.2,
+        "c": 0.2
+      },
+      "difficulty": -1.2,
+      "discrimination": 0.6,
+      "guessing": 0.2,
+      "correctResponses": ["B"],
+      "distractors": ["A", "C", "D"],
+      "metadata": {
+        "topic": "percentages",
+        "language": "english"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "cat_007",
+      "category": "logical",
+      "type": 0,
+      "content": {
+        "question": "All roses are flowers. Some flowers fade quickly. Therefore:",
+        "options": ["A. Some roses fade quickly", "B. All flowers are roses", "C. Roses don't fade quickly", "D. Cannot be determined"]
+      },
+      "parameters": {
+        "a": 1.3,
+        "b": 1.0,
+        "c": 0.25
+      },
+      "difficulty": 1.0,
+      "discrimination": 1.3,
+      "guessing": 0.25,
+      "correctResponses": ["A"],
+      "distractors": ["B", "C", "D"],
+      "metadata": {
+        "topic": "logical reasoning",
+        "language": "english"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "cat_008",
+      "category": "spatial",
+      "type": 0,
+      "content": {
+        "question": "Which pattern follows the same rule as the others?",
+        "options": ["A. △◻●○", "B. ○△●◻", "C. ◻○△●", "D. ●△◻○"],
+        "note": "Rule: Each symbol shifts position alternately"
+      },
+      "parameters": {
+        "a": 1.1,
+        "b": 1.8,
+        "c": 0.2
+      },
+      "difficulty": 1.8,
+      "discrimination": 1.1,
+      "guessing": 0.2,
+      "correctResponses": ["C"],
+      "distractors": ["A", "B", "D"],
+      "metadata": {
+        "topic": "pattern recognition",
+        "language": "english"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    }
+  ]
+}

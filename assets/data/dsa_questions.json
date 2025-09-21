@@ -1,0 +1,459 @@
+[
+  {
+    "questionText": "Two Sum: Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "initialCode": {
+      "javascript": "function twoSum(nums, target) {\n    // Your code here\n}",
+      "python": "def two_sum(nums, target):\n    # Your code here\n    pass",
+      "java": "public int[] twoSum(int[] nums, int target) {\n    // Your code here\n}",
+      "cpp": "vector<int> twoSum(vector<int>& nums, int target) {\n    // Your code here\n}",
+      "csharp": "public int[] TwoSum(int[] nums, int target) {\n    // Your code here\n}"
+    },
+    "solution": "// PSEUDO CODE:\n// 1. Create a hash map to store numbers and their indices\n// 2. Loop through the array\n// 3. For each number, calculate complement = target - current number\n// 4. Check if complement exists in hash map\n// 5. If yes, return [complement_index, current_index]\n// 6. If no, store current number and index in hash map\n\nfunction twoSum(nums, target) {\n    const map = new Map();\n    for (let i = 0; i < nums.length; i++) {\n        const complement = target - nums[i];\n        if (map.has(complement)) {\n            return [map.get(complement), i];\n        }\n        map.set(nums[i], i);\n    }\n    return [];\n}",
+    "testCases": [
+      {
+        "input": "[2,7,11,15]\n9",
+        "output": "[0, 1]",
+        "hidden": false
+      },
+      {
+        "input": "[3,2,4]\n6",
+        "output": "[1, 2]",
+        "hidden": false
+      },
+      {
+        "input": "[3,3]\n6",
+        "output": "[0, 1]",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Reverse String: Write a function that reverses a string. The input string is given as an array of characters s.",
+    "initialCode": {
+      "javascript": "function reverseString(s) {\n    // Your code here\n}",
+      "python": "def reverse_string(s):\n    # Your code here\n    pass",
+      "java": "public void reverseString(char[] s) {\n    // Your code here\n}",
+      "cpp": "void reverseString(vector<char>& s) {\n    // Your code here\n}",
+      "csharp": "public void ReverseString(char[] s) {\n    // Your code here\n}"
+    },
+    "solution": "// PSEUDO CODE:\n// 1. Use two pointers: left = 0, right = s.length - 1\n// 2. While left < right:\n//    - Swap s[left] with s[right]\n//    - Increment left, decrement right\n// 3. String is reversed in-place\n\nfunction reverseString(s) {\n    let left = 0;\n    let right = s.length - 1;\n    while (left < right) {\n        [s[left], s[right]] = [s[right], s[left]];\n        left++;\n        right--;\n    }\n}",
+    "testCases": [
+      {
+        "input": "[\"h\",\"e\",\"l\",\"l\",\"o\"]",
+        "output": "[\"o\",\"l\",\"l\",\"e\",\"h\"]",
+        "hidden": false
+      },
+      {
+        "input": "[\"H\",\"a\",\"n\",\"n\",\"a\",\"h\"]",
+        "output": "[\"h\",\"a\",\"n\",\"n\",\"a\",\"H\"]",
+        "hidden": false
+      },
+      {
+        "input": "[\"a\"]",
+        "output": "[\"a\"]",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Merge Two Sorted Lists: Merge two sorted linked lists and return it as a sorted list.",
+    "initialCode": {
+      "javascript": "function mergeTwoLists(list1, list2) {\n    // Your code here\n}",
+      "python": "def merge_two_lists(list1, list2):\n    # Your code here\n    pass",
+      "java": "public ListNode mergeTwoLists(ListNode list1, ListNode list2) {\n    // Your code here\n}",
+      "cpp": "ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {\n    // Your code here\n}",
+      "csharp": "public ListNode MergeTwoLists(ListNode list1, ListNode list2) {\n    // Your code here\n}"
+    },
+    "solution": "// PSEUDO CODE:\n// 1. Create a dummy head node\n// 2. Use two pointers for both lists\n// 3. Compare current nodes, append smaller one to result\n// 4. Move pointer of the list from which node was taken\n// 5. Continue until one list is exhausted\n// 6. Append remaining nodes from the other list\n\nfunction mergeTwoLists(list1, list2) {\n    const dummy = { val: 0, next: null };\n    let current = dummy;\n    \n    while (list1 !== null && list2 !== null) {\n        if (list1.val <= list2.val) {\n            current.next = list1;\n            list1 = list1.next;\n        } else {\n            current.next = list2;\n            list2 = list2.next;\n        }\n        current = current.next;\n    }\n    \n    current.next = list1 !== null ? list1 : list2;\n    return dummy.next;\n}",
+    "testCases": [
+      {
+        "input": "[1,2,4]\n[1,3,4]",
+        "output": "[1,1,2,3,4,4]",
+        "hidden": false
+      },
+      {
+        "input": "[]\n[]",
+        "output": "[]",
+        "hidden": false
+      },
+      {
+        "input": "[]\n[0]",
+        "output": "[0]",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Valid Parentheses: Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.",
+    "initialCode": {
+      "javascript": "function isValid(s) {\n    // Your code here\n}",
+      "python": "def is_valid(s):\n    # Your code here\n    pass",
+      "java": "public boolean isValid(String s) {\n    // Your code here\n}",
+      "cpp": "bool isValid(string s) {\n    // Your code here\n}",
+      "csharp": "public bool IsValid(string s) {\n    // Your code here\n}"
+    },
+    "testCases": [
+      {
+        "input": "\"()\"",
+        "output": "true",
+        "hidden": false
+      },
+      {
+        "input": "\"()[]{}\"",
+        "output": "true",
+        "hidden": false
+      },
+      {
+        "input": "\"(]\"",
+        "output": "false",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Maximum Subarray: Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.",
+    "initialCode": {
+      "javascript": "function maxSubArray(nums) {\n    // Your code here\n}",
+      "python": "def max_subarray(nums):\n    # Your code here\n    pass",
+      "java": "public int maxSubArray(int[] nums) {\n    // Your code here\n}",
+      "cpp": "int maxSubArray(vector<int>& nums) {\n    // Your code here\n}",
+      "csharp": "public int MaxSubArray(int[] nums) {\n    // Your code here\n}"
+    },
+    "testCases": [
+      {
+        "input": "[-2,1,-3,4,-1,2,1,-5,4]",
+        "output": "6",
+        "hidden": false
+      },
+      {
+        "input": "[1]",
+        "output": "1",
+        "hidden": false
+      },
+      {
+        "input": "[5,4,-1,7,8]",
+        "output": "23",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Climbing Stairs: You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
+    "initialCode": {
+      "javascript": "function climbStairs(n) {\n    // Your code here\n}",
+      "python": "def climb_stairs(n):\n    # Your code here\n    pass",
+      "java": "public int climbStairs(int n) {\n    // Your code here\n}",
+      "cpp": "int climbStairs(int n) {\n    // Your code here\n}",
+      "csharp": "public int ClimbStairs(int n) {\n    // Your code here\n}"
+    },
+    "testCases": [
+      {
+        "input": "2",
+        "output": "2",
+        "hidden": false
+      },
+      {
+        "input": "3",
+        "output": "3",
+        "hidden": false
+      },
+      {
+        "input": "4",
+        "output": "5",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Binary Tree Inorder Traversal: Given the root of a binary tree, return the inorder traversal of its nodes' values.",
+    "initialCode": {
+      "javascript": "function inorderTraversal(root) {\n    // Your code here\n}",
+      "python": "def inorder_traversal(root):\n    # Your code here\n    pass",
+      "java": "public List<Integer> inorderTraversal(TreeNode root) {\n    // Your code here\n}",
+      "cpp": "vector<int> inorderTraversal(TreeNode* root) {\n    // Your code here\n}",
+      "csharp": "public IList<int> InorderTraversal(TreeNode root) {\n    // Your code here\n}"
+    },
+    "testCases": [
+      {
+        "input": "[1,null,2,3]",
+        "output": "[1,3,2]",
+        "hidden": false
+      },
+      {
+        "input": "[]",
+        "output": "[]",
+        "hidden": false
+      },
+      {
+        "input": "[1]",
+        "output": "[1]",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Same Tree: Given the roots of two binary trees p and q, write a function to check if they are the same or not.",
+    "initialCode": {
+      "javascript": "function isSameTree(p, q) {\n    // Your code here\n}",
+      "python": "def is_same_tree(p, q):\n    # Your code here\n    pass",
+      "java": "public boolean isSameTree(TreeNode p, TreeNode q) {\n    // Your code here\n}",
+      "cpp": "bool isSameTree(TreeNode* p, TreeNode* q) {\n    // Your code here\n}",
+      "csharp": "public bool IsSameTree(TreeNode p, TreeNode q) {\n    // Your code here\n}"
+    },
+    "testCases": [
+      {
+        "input": "[1,2,3]\n[1,2,3]",
+        "output": "true",
+        "hidden": false
+      },
+      {
+        "input": "[1,2]\n[1,null,2]",
+        "output": "false",
+        "hidden": false
+      },
+      {
+        "input": "[1,2,1]\n[1,1,2]",
+        "output": "false",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Symmetric Tree: Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).",
+    "initialCode": {
+      "javascript": "function isSymmetric(root) {\n    // Your code here\n}",
+      "python": "def is_symmetric(root):\n    # Your code here\n    pass",
+      "java": "public boolean isSymmetric(TreeNode root) {\n    // Your code here\n}",
+      "cpp": "bool isSymmetric(TreeNode* root) {\n    // Your code here\n}",
+      "csharp": "public bool IsSymmetric(TreeNode root) {\n    // Your code here\n}"
+    },
+    "testCases": [
+      {
+        "input": "[1,2,2,3,4,4,3]",
+        "output": "true",
+        "hidden": false
+      },
+      {
+        "input": "[1,2,2,null,3,null,3]",
+        "output": "false",
+        "hidden": false
+      },
+      {
+        "input": "[1]",
+        "output": "true",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Maximum Depth of Binary Tree: Given the root of a binary tree, return its maximum depth.",
+    "initialCode": {
+      "javascript": "function maxDepth(root) {\n    // Your code here\n}",
+      "python": "def max_depth(root):\n    # Your code here\n    pass",
+      "java": "public int maxDepth(TreeNode root) {\n    // Your code here\n}",
+      "cpp": "int maxDepth(TreeNode* root) {\n    // Your code here\n}",
+      "csharp": "public int MaxDepth(TreeNode root) {\n    // Your code here\n}"
+    },
+    "testCases": [
+      {
+        "input": "[3,9,20,null,null,15,7]",
+        "output": "3",
+        "hidden": false
+      },
+      {
+        "input": "[1,null,2]",
+        "output": "2",
+        "hidden": false
+      },
+      {
+        "input": "[]",
+        "output": "0",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Implement Stack using Queues: Implement a last-in-first-out (LIFO) stack using only two queues.",
+    "initialCode": "class MyStack {\n    constructor() {\n        // Your code here\n    }\n    \n    push(x) {\n        // Your code here\n    }\n    \n    pop() {\n        // Your code here\n    }\n    \n    top() {\n        // Your code here\n    }\n    \n    empty() {\n        // Your code here\n    }\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Use two queues: mainQueue and helperQueue\n// 2. For push: Add to mainQueue, then move all elements from mainQueue to helperQueue, then swap\n// 3. For pop: Remove from front of mainQueue\n// 4. For top: Return front of mainQueue\n// 5. For empty: Check if mainQueue is empty\n\nclass MyStack {\n    constructor() {\n        this.mainQueue = [];\n        this.helperQueue = [];\n    }\n    \n    push(x) {\n        this.mainQueue.push(x);\n        while (this.helperQueue.length > 0) {\n            this.mainQueue.push(this.helperQueue.shift());\n        }\n        [this.mainQueue, this.helperQueue] = [this.helperQueue, this.mainQueue];\n    }\n    \n    pop() {\n        return this.helperQueue.shift();\n    }\n    \n    top() {\n        return this.helperQueue[0];\n    }\n    \n    empty() {\n        return this.helperQueue.length === 0;\n    }\n}",
+    "testCases": [
+      {
+        "input": "push\n1\npush\n2\ntop",
+        "output": "2",
+        "hidden": false
+      },
+      {
+        "input": "push\n1\npop\nempty",
+        "output": "true",
+        "hidden": false
+      },
+      {
+        "input": "empty",
+        "output": "true",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Min Stack: Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.",
+    "initialCode": "class MinStack {\n    constructor() {\n        // Your code here\n    }\n    \n    push(val) {\n        // Your code here\n    }\n    \n    pop() {\n        // Your code here\n    }\n    \n    top() {\n        // Your code here\n    }\n    \n    getMin() {\n        // Your code here\n    }\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Use two stacks: one for values, one for minimums\n// 2. For push: Push to value stack, push min(current min, val) to min stack\n// 3. For pop: Pop both stacks\n// 4. For top: Return top of value stack\n// 5. For getMin: Return top of min stack\n\nclass MinStack {\n    constructor() {\n        this.stack = [];\n        this.minStack = [];\n    }\n    \n    push(val) {\n        this.stack.push(val);\n        const minVal = this.minStack.length === 0 ? val : Math.min(this.minStack[this.minStack.length - 1], val);\n        this.minStack.push(minVal);\n    }\n    \n    pop() {\n        this.stack.pop();\n        this.minStack.pop();\n    }\n    \n    top() {\n        return this.stack[this.stack.length - 1];\n    }\n    \n    getMin() {\n        return this.minStack[this.minStack.length - 1];\n    }\n}",
+    "testCases": [
+      {
+        "input": "push\n-2\npush\n0\npush\n-3\ngetMin",
+        "output": "-3",
+        "hidden": false
+      },
+      {
+        "input": "push\n-2\npush\n0\ngetMin\npop\ngetMin",
+        "output": "-2",
+        "hidden": false
+      },
+      {
+        "input": "push\n1\ngetMin",
+        "output": "1",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Evaluate Reverse Polish Notation: Evaluate the value of an arithmetic expression in Reverse Polish Notation.",
+    "initialCode": {
+      "javascript": "function evalRPN(tokens) {\n    // Your code here\n}",
+      "python": "def eval_rpn(tokens):\n    # Your code here\n    pass",
+      "java": "public int evalRPN(String[] tokens) {\n    // Your code here\n}",
+      "cpp": "int evalRPN(vector<string>& tokens) {\n    // Your code here\n}",
+      "csharp": "public int EvalRPN(string[] tokens) {\n    // Your code here\n}"
+    },
+    "solution": "// PSEUDO CODE:\n// 1. Use a stack to store numbers\n// 2. For each token:\n//    - If it's a number, push to stack\n//    - If it's an operator, pop two numbers, apply operation, push result\n// 3. Final result is the only element left in stack\n\nfunction evalRPN(tokens) {\n    const stack = [];\n    for (const token of tokens) {\n        if (!isNaN(token)) {\n            stack.push(parseInt(token));\n        } else {\n            const b = stack.pop();\n            const a = stack.pop();\n            switch (token) {\n                case '+': stack.push(a + b); break;\n                case '-': stack.push(a - b); break;\n                case '*': stack.push(a * b); break;\n                case '/': stack.push(Math.trunc(a / b)); break;\n            }\n        }\n    }\n    return stack[0];\n}",
+    "testCases": [
+      {
+        "input": "[\"2\",\"1\",\"+\",\"3\",\"*\"]",
+        "output": "9",
+        "hidden": false
+      },
+      {
+        "input": "[\"4\",\"13\",\"5\",\"/\",\"+\"]",
+        "output": "6",
+        "hidden": false
+      },
+      {
+        "input": "[\"10\",\"6\",\"9\",\"3\",\"+\",\"-11\",\"*\",\"/\",\"*\",\"17\",\"+\",\"5\",\"+\"]",
+        "output": "22",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Next Greater Element I: Find the next greater element for each element in nums1 within nums2.",
+    "initialCode": {
+      "javascript": "function nextGreaterElement(nums1, nums2) {\n    // Your code here\n}",
+      "python": "def next_greater_element(nums1, nums2):\n    # Your code here\n    pass",
+      "java": "public int[] nextGreaterElement(int[] nums1, int[] nums2) {\n    // Your code here\n}",
+      "cpp": "vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {\n    // Your code here\n}",
+      "csharp": "public int[] NextGreaterElement(int[] nums1, int[] nums2) {\n    // Your code here\n}"
+    },
+    "solution": "// PSEUDO CODE:\n// 1. Use a stack and a map to store next greater elements\n// 2. Iterate through nums2 from right to left\n// 3. For each element, while stack is not empty and current > stack top, pop stack\n// 4. If stack is empty, no greater element, else stack top is greater\n// 5. Push current element to stack\n// 6. For nums1 elements, lookup in the map\n\nfunction nextGreaterElement(nums1, nums2) {\n    const map = new Map();\n    const stack = [];\n    \n    for (let i = nums2.length - 1; i >= 0; i--) {\n        while (stack.length > 0 && nums2[i] >= stack[stack.length - 1]) {\n            stack.pop();\n        }\n        map.set(nums2[i], stack.length === 0 ? -1 : stack[stack.length - 1]);\n        stack.push(nums2[i]);\n    }\n    \n    return nums1.map(num => map.get(num));\n}",
+    "testCases": [
+      {
+        "input": "[4,1,2]\n[1,3,4,2]",
+        "output": "[-1,3,-1]",
+        "hidden": false
+      },
+      {
+        "input": "[2,4]\n[1,2,3,4]",
+        "output": "[3,-1]",
+        "hidden": false
+      },
+      {
+        "input": "[1]\n[1]",
+        "output": "[-1]",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Valid Parentheses (Advanced): Given a string s containing '(', ')', '{', '}', '[' and ']', determine if valid with nested structures.",
+    "initialCode": {
+      "javascript": "function isValid(s) {\n    // Your code here\n}",
+      "python": "def is_valid(s):\n    # Your code here\n    pass",
+      "java": "public boolean isValid(String s) {\n    // Your code here\n}",
+      "cpp": "bool isValid(string s) {\n    // Your code here\n}",
+      "csharp": "public bool IsValid(string s) {\n    // Your code here\n}"
+    },
+    "solution": "// PSEUDO CODE:\n// 1. Use a stack to track opening brackets\n// 2. Map of closing to opening brackets\n// 3. For each character:\n//    - If opening bracket, push to stack\n//    - If closing bracket, check if matches stack top\n// 4. Stack should be empty at end\n\nfunction isValid(s) {\n    const stack = [];\n    const map = {\n        ')': '(',\n        '}': '{',\n        ']': '['\n    };\n    \n    for (const char of s) {\n        if (char === '(' || char === '{' || char === '[') {\n            stack.push(char);\n        } else if (char === ')' || char === '}' || char === ']') {\n            if (stack.length === 0 || stack.pop() !== map[char]) {\n                return false;\n            }\n        }\n    }\n    \n    return stack.length === 0;\n}",
+    "testCases": [
+      {
+        "input": "\"([{}])\"",
+        "output": "true",
+        "hidden": false
+      },
+      {
+        "input": "\"{[(])}",
+        "output": "false",
+        "hidden": false
+      },
+      {
+        "input": "\"\"",
+        "output": "true",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Daily Temperatures: Given temperatures, return array where each element is days until warmer temperature.",
+    "initialCode": {
+      "javascript": "function dailyTemperatures(temperatures) {\n    // Your code here\n}",
+      "python": "def daily_temperatures(temperatures):\n    # Your code here\n    pass",
+      "java": "public int[] dailyTemperatures(int[] temperatures) {\n    // Your code here\n}",
+      "cpp": "vector<int> dailyTemperatures(vector<int>& temperatures) {\n    // Your code here\n}",
+      "csharp": "public int[] DailyTemperatures(int[] temperatures) {\n    // Your code here\n}"
+    },
+    "solution": "// PSEUDO CODE:\n// 1. Use stack to store indices\n// 2. Initialize result array with 0s\n// 3. Iterate through temperatures\n// 4. While stack not empty and current temp > temp at stack top:\n//    - Pop index, calculate days difference, update result\n// 5. Push current index to stack\n\nfunction dailyTemperatures(temperatures) {\n    const result = new Array(temperatures.length).fill(0);\n    const stack = [];\n    \n    for (let i = 0; i < temperatures.length; i++) {\n        while (stack.length > 0 && temperatures[i] > temperatures[stack[stack.length - 1]]) {\n            const prevIndex = stack.pop();\n            result[prevIndex] = i - prevIndex;\n        }\n        stack.push(i);\n    }\n    \n    return result;\n}",
+    "testCases": [
+      {
+        "input": "[73,74,75,71,69,72,76,73]",
+        "output": "[1,1,4,2,1,1,0,0]",
+        "hidden": false
+      },
+      {
+        "input": "[30,40,50,60]",
+        "output": "[1,1,1,0]",
+        "hidden": false
+      },
+      {
+        "input": "[30,60,90]",
+        "output": "[1,1,0]",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Largest Rectangle in Histogram: Given heights of bars, find largest rectangle area.",
+    "initialCode": {
+      "javascript": "function largestRectangleArea(heights) {\n    // Your code here\n}",
+      "python": "def largest_rectangle_area(heights):\n    # Your code here\n    pass",
+      "java": "public int largestRectangleArea(int[] heights) {\n    // Your code here\n}",
+      "cpp": "int largestRectangleArea(vector<int>& heights) {\n    // Your code here\n}",
+      "csharp": "public int LargestRectangleArea(int[] heights) {\n    // Your code here\n}"
+    },
+    "solution": "// PSEUDO CODE:\n// 1. Use stack to store indices\n// 2. Add 0 to end of heights for boundary\n// 3. For each bar, while stack not empty and current height < height at stack top:\n//    - Pop, calculate area with current as right boundary\n// 4. Keep track of maximum area\n\nfunction largestRectangleArea(heights) {\n    const stack = [];\n    let maxArea = 0;\n    heights.push(0);\n    \n    for (let i = 0; i < heights.length; i++) {\n        while (stack.length > 0 && heights[i] < heights[stack[stack.length - 1]]) {\n            const height = heights[stack.pop()];\n            const width = stack.length === 0 ? i : i - stack[stack.length - 1] - 1;\n            maxArea = Math.max(maxArea, height * width);\n        }\n        stack.push(i);\n    }\n    \n    return maxArea;\n}",
+    "testCases": [
+      {
+        "input": "[2,1,5,6,2,3]",
+        "output": "10",
+        "hidden": false
+      },
+      {
+        "input": "[2,4]",
+        "output": "4",
+        "hidden": false
+      },
+      {
+        "input": "[1]",
+        "output": "1",
+        "hidden": true
+      }
+    ]
+  }
+]

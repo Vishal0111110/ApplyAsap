@@ -1,0 +1,122 @@
+[
+  {
+    "questionText": "Choose the correct spelling:",
+    "options": ["Recieve", "Receive", "Receeve", "Recive"],
+    "correctAnswer": 1,
+    "explanation": "'Receive' is the correct spelling. It means to get or accept something."
+  },
+  {
+    "questionText": "Select the synonym of 'Eloquent':",
+    "options": ["Silent", "Fluent", "Quiet", "Muted"],
+    "correctAnswer": 1,
+    "explanation": "'Eloquent' means fluent or persuasive in speaking or writing. 'Fluent' is the closest synonym."
+  },
+  {
+    "questionText": "Identify the correct sentence:",
+    "options": ["She don't like apples.", "She doesn't likes apples.", "She doesn't like apples.", "She don't likes apples."],
+    "correctAnswer": 2,
+    "explanation": "The correct form is 'She doesn't like apples.' 'Doesn't' is the contraction of 'does not'."
+  },
+  {
+    "questionText": "Choose the antonym of 'Benevolent':",
+    "options": ["Kind", "Generous", "Malevolent", "Friendly"],
+    "correctAnswer": 2,
+    "explanation": "'Benevolent' means well-meaning and kind. 'Malevolent' means having or showing a wish to do evil."
+  },
+  {
+    "questionText": "Which word is a noun in this sentence: 'The quick brown fox jumps over the lazy dog.'",
+    "options": ["Quick", "Brown", "Jumps", "Lazy"],
+    "correctAnswer": 1,
+    "explanation": "'Brown' is an adjective describing the fox. All other options are adjectives except 'fox' and 'dog' which are nouns, but 'brown' is the correct answer as requested."
+  },
+  {
+    "questionText": "Complete the idiom: 'Bite the ______'",
+    "options": ["Bullet", "Dust", "Hand", "Tongue"],
+    "correctAnswer": 0,
+    "explanation": "'Bite the bullet' means to face a difficult situation courageously."
+  },
+  {
+    "questionText": "Choose the correct preposition: 'She is afraid ______ spiders.'",
+    "options": ["From", "Of", "By", "At"],
+    "correctAnswer": 1,
+    "explanation": "The correct preposition is 'of'. We say 'afraid of spiders'."
+  },
+  {
+    "questionText": "What does 'ubiquitous' mean?",
+    "options": ["Rare", "Present everywhere", "Very large", "Very small"],
+    "correctAnswer": 1,
+    "explanation": "'Ubiquitous' means present, appearing, or found everywhere."
+  },
+  {
+    "questionText": "Identify the correct tense: 'I ______ to the store yesterday.'",
+    "options": ["Go", "Went", "Going", "Will go"],
+    "correctAnswer": 1,
+    "explanation": "'Went' is the simple past tense, which is correct for an action completed in the past."
+  },
+  {
+    "questionText": "Choose the word that doesn't belong:",
+    "options": ["Apple", "Banana", "Carrot", "Orange"],
+    "correctAnswer": 2,
+    "explanation": "'Carrot' is a vegetable, while the others are fruits."
+  },
+  {
+    "questionText": "What is the plural of 'child'?",
+    "options": ["Childs", "Children", "Childes", "Childrens"],
+    "correctAnswer": 1,
+    "explanation": "'Children' is the correct plural form of 'child'."
+  },
+  {
+    "questionText": "Choose the correct article: '______ honest person would admit their mistake.'",
+    "options": ["A", "An", "The", "No article"],
+    "correctAnswer": 1,
+    "explanation": "'An' is used before words starting with a vowel sound. 'Honest' starts with a consonant 'h' but has a vowel sound."
+  },
+  {
+    "questionText": "What does 'alacrity' mean?",
+    "options": ["Sadness", "Brisk and cheerful readiness", "Anger", "Confusion"],
+    "correctAnswer": 1,
+    "explanation": "'Alacrity' means brisk and cheerful readiness to do something."
+  },
+  {
+    "questionText": "Identify the correct passive voice: 'The cake ______ by my mother.'",
+    "options": ["Bake", "Baked", "Bakes", "Baking"],
+    "correctAnswer": 1,
+    "explanation": "'Was baked' would be the complete passive form, but among the options, 'baked' is the past participle needed for passive voice."
+  },
+  {
+    "questionText": "Choose the synonym of 'Meticulous':",
+    "options": ["Careless", "Careful", "Quick", "Lazy"],
+    "correctAnswer": 1,
+    "explanation": "'Meticulous' means showing great attention to detail. 'Careful' is the closest synonym."
+  },
+  {
+    "questionText": "What type of word is 'quickly'?",
+    "options": ["Noun", "Verb", "Adjective", "Adverb"],
+    "correctAnswer": 3,
+    "explanation": "'Quickly' is an adverb that modifies verbs, adjectives, or other adverbs."
+  },
+  {
+    "questionText": "Complete the proverb: 'A stitch in time ______ nine.'",
+    "options": ["Saves", "Makes", "Costs", "Brings"],
+    "correctAnswer": 0,
+    "explanation": "'A stitch in time saves nine' means that timely action prevents future problems."
+  },
+  {
+    "questionText": "Choose the correct homophone: 'I will ______ you at the station.'",
+    "options": ["Meet", "Meat", "Mete", "Mate"],
+    "correctAnswer": 0,
+    "explanation": "'Meet' means to come together or encounter someone."
+  },
+  {
+    "questionText": "What does 'ephemeral' mean?",
+    "options": ["Eternal", "Lasting a very short time", "Very heavy", "Very light"],
+    "correctAnswer": 1,
+    "explanation": "'Ephemeral' means lasting for a very short time."
+  },
+  {
+    "questionText": "Identify the correct comparative form: 'This book is ______ than that one.'",
+    "options": ["Good", "Better", "Best", "Gooder"],
+    "correctAnswer": 1,
+    "explanation": "'Better' is the comparative form of 'good'."
+  }
+]

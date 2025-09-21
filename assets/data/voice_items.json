@@ -1,0 +1,164 @@
+{
+  "items": [
+    {
+      "itemId": "voice_001",
+      "category": "prosody",
+      "type": 2,
+      "content": {
+        "prompt": "Read the following passage aloud clearly and expressively: 'The sun rose slowly over the horizon, painting the sky in vibrant hues of orange and pink. Birds began their morning songs, welcoming the new day with cheerful melodies.'"
+      },
+      "parameters": {
+        "a": 0.8,
+        "b": 0.0,
+        "c": 0.0
+      },
+      "difficulty": 0.0,
+      "discrimination": 0.8,
+      "guessing": 0.0,
+      "correctResponses": [],
+      "distractors": [],
+      "expectedKeywords": ["sun", "horizon", "sky", "orange", "pink", "birds", "morning", "songs", "welcoming", "new", "day", "cheerful", "melodies"],
+      "featureRequirements": {
+        "pitch_variation": 0.6,
+        "speech_rate": 0.5,
+        "pause_duration": 0.3,
+        "articulation_clarity": 0.8
+      },
+      "metadata": {
+        "task_type": "reading_comprehension",
+        "focus_area": "prosody_and_clarity"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "voice_002",
+      "category": "stress",
+      "type": 2,
+      "content": {
+        "prompt": "Imagine you're giving a presentation about climate change. Make a 30-second speech conveying urgency and concern. Be emotional but controlled."
+      },
+      "parameters": {
+        "a": 0.9,
+        "b": 0.5,
+        "c": 0.0
+      },
+      "difficulty": 0.5,
+      "discrimination": 0.9,
+      "guessing": 0.0,
+      "correctResponses": [],
+      "distractors": [],
+      "expectedKeywords": ["climate", "change", "urgent", "concern", "environment", "action", "future"],
+      "featureRequirements": {
+        "pitch_variation": 0.8,
+        "intensity": 0.7,
+        "tempo": 0.6,
+        "pace_control": 0.8
+      },
+      "metadata": {
+        "task_type": "emotional_expression",
+        "focus_area": "stress_management"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "voice_003",
+      "category": "articulation",
+      "type": 2,
+      "content": {
+        "prompt": "Pronounce these tongue twisters clearly and accurately: 'She sells sea shells by the seashore. Six sick hicks nick six slick bricks with picks and sticks.' Take your time and speak slowly."
+      },
+      "parameters": {
+        "a": 0.7,
+        "b": -0.3,
+        "c": 0.0
+      },
+      "difficulty": -0.3,
+      "discrimination": 0.7,
+      "guessing": 0.0,
+      "correctResponses": [],
+      "distractors": [],
+      "expectedKeywords": ["shells", "seashore", "sick", "hicks", "bricks", "picks", "sticks"],
+      "featureRequirements": {
+        "articulation_clarity": 0.9,
+        "speech_rate": 0.4,
+        "phoneme_precision": 0.8,
+        "control": 0.7
+      },
+      "metadata": {
+        "task_type": "articulation_challenge",
+        "focus_area": "diction_and_clarity"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "voice_004",
+      "category": "fluency",
+      "type": 2,
+      "content": {
+        "prompt": "Tell me about your favorite hobby in detail. Speak continuously for at least 45 seconds without long pauses or hesitation. Fill in details and examples."
+      },
+      "parameters": {
+        "a": 1.0,
+        "b": 0.2,
+        "c": 0.0
+      },
+      "difficulty": 0.2,
+      "discrimination": 1.0,
+      "guessing": 0.0,
+      "correctResponses": [],
+      "distractors": [],
+      "expectedKeywords": ["favorite", "hobby", "activity", "enjoy", "practice", "learn", "fun"],
+      "featureRequirements": {
+        "fluency": 0.9,
+        "spoken_connectives": 0.7,
+        "pause_control": 0.8,
+        "speech_rate": 0.6
+      },
+      "metadata": {
+        "task_type": "extemporaneous_speech",
+        "focus_area": "fluency_and_coherence"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "voice_005",
+      "category": "comprehension",
+      "type": 2,
+      "content": {
+        "prompt": "Listen to this scenario and respond naturally: 'You arrive at the airport for your flight which departs in 2 hours. You notice your passport is missing. Act out calling your home to get help finding it.'"
+      },
+      "parameters": {
+        "a": 0.9,
+        "b": 0.8,
+        "c": 0.0
+      },
+      "difficulty": 0.8,
+      "discrimination": 0.9,
+      "guessing": 0.0,
+      "correctResponses": [],
+      "distractors": [],
+      "expectedKeywords": ["airport", "flight", "passport", "missing", "call", "home", "help", "find"],
+      "featureRequirements": {
+        "situational_awareness": 0.8,
+        "emotional_expression": 0.7,
+        "cognitive_load": 0.6,
+        "immediate_response": 0.8
+      },
+      "metadata": {
+        "task_type": "role_play",
+        "focus_area": "cognitive_and_emotional_processing"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    }
+  ]
+}

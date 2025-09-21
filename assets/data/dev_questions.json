@@ -1,0 +1,266 @@
+[
+  {
+    "questionText": "Implement a function that demonstrates closures by creating a counter.",
+    "initialCode": "function createCounter() {\n    // Your code here\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Create a variable to store the count (private to the function)\n// 2. Return an object with methods that can access this variable\n// 3. The returned methods form a closure over the count variable\n\nfunction createCounter() {\n    let count = 0;\n    return {\n        increment: () => ++count,\n        decrement: () => --count,\n        getValue: () => count\n    };\n}",
+    "testCases": [
+      {
+        "input": "increment\nincrement\ngetValue",
+        "output": "2",
+        "hidden": false
+      },
+      {
+        "input": "increment\ndecrement\ngetValue",
+        "output": "0",
+        "hidden": false
+      },
+      {
+        "input": "getValue",
+        "output": "0",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Create a function that demonstrates prototypal inheritance.",
+    "initialCode": "function Animal(name) {\n    this.name = name;\n}\n\nAnimal.prototype.speak = function() {\n    return this.name + ' makes a sound';\n};\n\n// Create Dog constructor that inherits from Animal\nfunction Dog(name, breed) {\n    // Your code here\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Call the parent constructor with the current context\n// 2. Set up the prototype chain using Object.create()\n// 3. Set the constructor property correctly\n// 4. Add any additional properties specific to Dog\n\nfunction Dog(name, breed) {\n    Animal.call(this, name);\n    this.breed = breed;\n}\n\nDog.prototype = Object.create(Animal.prototype);\nDog.prototype.constructor = Dog;\n\nDog.prototype.speak = function() {\n    return this.name + ' barks';\n};",
+    "testCases": [
+      {
+        "input": "new Dog('Buddy', 'Golden Retriever')\nspeak",
+        "output": "\"Buddy barks\"",
+        "hidden": false
+      },
+      {
+        "input": "new Dog('Max', 'Labrador')\nname",
+        "output": "\"Max\"",
+        "hidden": false
+      },
+      {
+        "input": "new Dog('Charlie', 'Poodle')\nbreed",
+        "output": "\"Poodle\"",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Implement a function that demonstrates async/await with error handling.",
+    "initialCode": "async function fetchUserData(userId) {\n    try {\n        // Your code here\n    } catch (error) {\n        // Your code here\n    }\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Use async/await syntax for asynchronous operations\n// 2. Wrap in try-catch for error handling\n// 3. Simulate API calls with Promises\n// 4. Return appropriate data or error message\n\nasync function fetchUserData(userId) {\n    try {\n        const userResponse = await new Promise((resolve, reject) => {\n            setTimeout(() => {\n                if (userId === '123') {\n                    resolve({ id: userId, name: 'John Doe' });\n                } else {\n                    reject(new Error('User not found'));\n                }\n            }, 100);\n        });\n        \n        const postsResponse = await new Promise(resolve => {\n            setTimeout(() => {\n                resolve([{ id: 1, title: 'Post 1' }, { id: 2, title: 'Post 2' }]);\n            }, 100);\n        });\n        \n        return { user: userResponse, posts: postsResponse };\n    } catch (error) {\n        return { error: error.message };\n    }\n}",
+    "testCases": [
+      {
+        "input": "\"123\"",
+        "output": "{\"user\":{\"id\":\"123\",\"name\":\"John Doe\"},\"posts\":[{\"id\":1,\"title\":\"Post 1\"},{\"id\":2,\"title\":\"Post 2\"}]}",
+        "hidden": false
+      },
+      {
+        "input": "\"456\"",
+        "output": "{\"error\":\"User not found\"}",
+        "hidden": false
+      },
+      {
+        "input": "\"789\"",
+        "output": "{\"error\":\"User not found\"}",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Create a function that implements the Module Pattern.",
+    "initialCode": "const Calculator = (function() {\n    // Private variables and functions\n    // Your code here\n    \n    // Public API\n    return {\n        // Your code here\n    };\n})();",
+    "solution": "// PSEUDO CODE:\n// 1. Use an IIFE (Immediately Invoked Function Expression)\n// 2. Define private variables and functions inside the IIFE\n// 3. Return an object with public methods that can access private members\n// 4. This creates encapsulation and data hiding\n\nconst Calculator = (function() {\n    // Private variables\n    let memory = 0;\n    let history = [];\n    \n    // Private functions\n    function validateNumber(num) {\n        return typeof num === 'number' && !isNaN(num);\n    }\n    \n    function addToHistory(operation, result) {\n        history.push({ operation, result, timestamp: Date.now() });\n    }\n    \n    // Public API\n    return {\n        add: function(a, b) {\n            if (!validateNumber(a) || !validateNumber(b)) {\n                throw new Error('Invalid numbers');\n            }\n            const result = a + b;\n            addToHistory(`add(${a}, ${b})`, result);\n            return result;\n        },\n        \n        subtract: function(a, b) {\n            if (!validateNumber(a) || !validateNumber(b)) {\n                throw new Error('Invalid numbers');\n            }\n            const result = a - b;\n            addToHistory(`subtract(${a}, ${b})`, result);\n            return result;\n        },\n        \n        getMemory: function() {\n            return memory;\n        },\n        \n        setMemory: function(value) {\n            if (validateNumber(value)) {\n                memory = value;\n            }\n        },\n        \n        getHistory: function() {\n            return history.slice(); // Return a copy\n        }\n    };\n})();",
+    "testCases": [
+      {
+        "input": "add\n5\n3",
+        "output": "8",
+        "hidden": false
+      },
+      {
+        "input": "subtract\n10\n4",
+        "output": "6",
+        "hidden": false
+      },
+      {
+        "input": "setMemory\n42\ngetMemory",
+        "output": "42",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Implement a function that demonstrates ES6 destructuring and rest/spread operators.",
+    "initialCode": "function processUserData(user) {\n    // Your code here\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Use destructuring to extract properties from objects/arrays\n// 2. Use rest operator to collect remaining elements\n// 3. Use spread operator to expand arrays/objects\n// 4. Return transformed data using modern syntax\n\nfunction processUserData(user) {\n    const { name, age, email, ...otherInfo } = user;\n    const hobbies = otherInfo.hobbies || [];\n    const [primaryHobby, ...otherHobbies] = hobbies;\n    \n    return {\n        displayName: name,\n        isAdult: age >= 18,\n        contact: email,\n        primaryInterest: primaryHobby,\n        additionalInterests: otherHobbies,\n        metadata: { ...otherInfo, processedAt: new Date().toISOString() }\n    };\n}",
+    "testCases": [
+      {
+        "input": "{\"name\":\"Alice\",\"age\":25,\"email\":\"alice@example.com\",\"hobbies\":[\"reading\",\"coding\",\"gaming\"],\"city\":\"New York\"}",
+        "output": "{\"displayName\":\"Alice\",\"isAdult\":true,\"contact\":\"alice@example.com\",\"primaryInterest\":\"reading\",\"additionalInterests\":[\"coding\",\"gaming\"],\"metadata\":{\"city\":\"New York\",\"processedAt\":\"2024-01-01T00:00:00.000Z\"}}",
+        "hidden": false
+      },
+      {
+        "input": "{\"name\":\"Bob\",\"age\":16,\"email\":\"bob@example.com\",\"hobbies\":[\"sports\"],\"country\":\"Canada\"}",
+        "output": "{\"displayName\":\"Bob\",\"isAdult\":false,\"contact\":\"bob@example.com\",\"primaryInterest\":\"sports\",\"additionalInterests\":[],\"metadata\":{\"country\":\"Canada\",\"processedAt\":\"2024-01-01T00:00:00.000Z\"}}",
+        "hidden": false
+      },
+      {
+        "input": "{\"name\":\"Charlie\",\"age\":30,\"email\":\"charlie@example.com\"}",
+        "output": "{\"displayName\":\"Charlie\",\"isAdult\":true,\"contact\":\"charlie@example.com\",\"primaryInterest\":undefined,\"additionalInterests\":[],\"metadata\":{\"processedAt\":\"2024-01-01T00:00:00.000Z\"}}",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Create a function that implements the Factory Pattern.",
+    "initialCode": "class ShapeFactory {\n    static createShape(type, ...args) {\n        // Your code here\n    }\n}\n\nclass Circle {\n    constructor(radius) {\n        this.radius = radius;\n    }\n    \n    area() {\n        return Math.PI * this.radius * this.radius;\n    }\n}\n\nclass Rectangle {\n    constructor(width, height) {\n        this.width = width;\n        this.height = height;\n    }\n    \n    area() {\n        return this.width * this.height;\n    }\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Create a factory function/class that creates objects based on type\n// 2. Define different classes for different types\n// 3. Use conditional logic to instantiate the correct class\n// 4. Return the created object\n\nclass ShapeFactory {\n    static createShape(type, ...args) {\n        switch (type.toLowerCase()) {\n            case 'circle':\n                return new Circle(...args);\n            case 'rectangle':\n                return new Rectangle(...args);\n            case 'triangle':\n                return new Triangle(...args);\n            default:\n                throw new Error(`Unknown shape type: ${type}`);\n        }\n    }\n}\n\nclass Circle {\n    constructor(radius) {\n        this.radius = radius;\n    }\n    \n    area() {\n        return Math.PI * this.radius * this.radius;\n    }\n    \n    perimeter() {\n        return 2 * Math.PI * this.radius;\n    }\n}\n\nclass Rectangle {\n    constructor(width, height) {\n        this.width = width;\n        this.height = height;\n    }\n    \n    area() {\n        return this.width * this.height;\n    }\n    \n    perimeter() {\n        return 2 * (this.width + this.height);\n    }\n}\n\nclass Triangle {\n    constructor(base, height) {\n        this.base = base;\n        this.height = height;\n    }\n    \n    area() {\n        return (this.base * this.height) / 2;\n    }\n}",
+    "testCases": [
+      {
+        "input": "\"circle\"\n5",
+        "output": "{\"area\":78.53981633974483,\"perimeter\":31.41592653589793}",
+        "hidden": false
+      },
+      {
+        "input": "\"rectangle\"\n4\n6",
+        "output": "{\"area\":24,\"perimeter\":20}",
+        "hidden": false
+      },
+      {
+        "input": "\"triangle\"\n8\n4",
+        "output": "{\"area\":16}",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Implement a function that demonstrates the Iterator Pattern.",
+    "initialCode": "class Iterator {\n    constructor(collection) {\n        this.collection = collection;\n        this.index = 0;\n    }\n    \n    hasNext() {\n        // Your code here\n    }\n    \n    next() {\n        // Your code here\n    }\n}\n\nclass Collection {\n    constructor(items) {\n        this.items = items;\n    }\n    \n    createIterator() {\n        // Your code here\n    }\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Create an Iterator class that manages traversal state\n// 2. Implement hasNext() to check if more elements exist\n// 3. Implement next() to return current element and advance\n// 4. Create a Collection class that can create iterators\n// 5. The iterator provides a way to access elements sequentially\n\nclass Iterator {\n    constructor(collection) {\n        this.collection = collection;\n        this.index = 0;\n    }\n    \n    hasNext() {\n        return this.index < this.collection.items.length;\n    }\n    \n    next() {\n        if (this.hasNext()) {\n            return this.collection.items[this.index++];\n        }\n        throw new Error('No more elements');\n    }\n    \n    reset() {\n        this.index = 0;\n    }\n}\n\nclass Collection {\n    constructor(items) {\n        this.items = items;\n    }\n    \n    createIterator() {\n        return new Iterator(this);\n    }\n    \n    forEach(callback) {\n        const iterator = this.createIterator();\n        while (iterator.hasNext()) {\n            callback(iterator.next());\n        }\n    }\n}",
+    "testCases": [
+      {
+        "input": "[1,2,3,4,5]\nhasNext\nnext\nnext\nhasNext",
+        "output": "true\n1\n2\ntrue",
+        "hidden": false
+      },
+      {
+        "input": "[\"a\",\"b\",\"c\"]\nnext\nnext\nnext\nhasNext",
+        "output": "\"a\"\n\"b\"\n\"c\"\nfalse",
+        "hidden": false
+      },
+      {
+        "input": "[]\nhasNext",
+        "output": "false",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Create a function that implements the Singleton Pattern.",
+    "initialCode": "class DatabaseConnection {\n    constructor() {\n        if (DatabaseConnection.instance) {\n            return DatabaseConnection.instance;\n        }\n        // Your initialization code here\n        DatabaseConnection.instance = this;\n    }\n    \n    // Your methods here\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Store the single instance in a static property\n// 2. Check if instance exists in constructor\n// 3. If exists, return it; otherwise create new instance\n// 4. Initialize the instance only once\n// 5. Provide methods to interact with the singleton\n\nclass DatabaseConnection {\n    constructor() {\n        if (DatabaseConnection.instance) {\n            return DatabaseConnection.instance;\n        }\n        \n        // Initialize the database connection\n        this.connectionString = 'mongodb://localhost:27017/myapp';\n        this.isConnected = false;\n        this.connectionPool = [];\n        \n        DatabaseConnection.instance = this;\n    }\n    \n    static getInstance() {\n        if (!DatabaseConnection.instance) {\n            DatabaseConnection.instance = new DatabaseConnection();\n        }\n        return DatabaseConnection.instance;\n    }\n    \n    connect() {\n        if (!this.isConnected) {\n            this.isConnected = true;\n            this.connectionPool.push('Connection established');\n            return 'Connected to database';\n        }\n        return 'Already connected';\n    }\n    \n    disconnect() {\n        if (this.isConnected) {\n            this.isConnected = false;\n            this.connectionPool = [];\n            return 'Disconnected from database';\n        }\n        return 'Not connected';\n    }\n    \n    query(sql) {\n        if (!this.isConnected) {\n            throw new Error('Not connected to database');\n        }\n        return `Executed query: ${sql}`;\n    }\n    \n    getStatus() {\n        return {\n            isConnected: this.isConnected,\n            connectionString: this.connectionString,\n            poolSize: this.connectionPool.length\n        };\n    }\n}",
+    "testCases": [
+      {
+        "input": "getInstance\nconnect",
+        "output": "\"Connected to database\"",
+        "hidden": false
+      },
+      {
+        "input": "getInstance\nquery\n\"SELECT * FROM users\"",
+        "output": "\"Executed query: SELECT * FROM users\"",
+        "hidden": false
+      },
+      {
+        "input": "getInstance\ndisconnect",
+        "output": "\"Disconnected from database\"",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Implement a function that demonstrates ES6 Proxy usage.",
+    "initialCode": "function createReactiveObject(target) {\n    // Your code here\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Use the Proxy constructor to create a proxy for an object\n// 2. Define handler object with traps for get/set operations\n// 3. Implement logging, validation, or other behaviors in traps\n// 4. Return the proxy object that behaves like the original but with added functionality\n\nfunction createReactiveObject(target) {\n    const handler = {\n        get: function(target, property, receiver) {\n            console.log(`Getting property: ${property}`);\n            return Reflect.get(target, property, receiver);\n        },\n        \n        set: function(target, property, value, receiver) {\n            console.log(`Setting property: ${property} = ${value}`);\n            \n            // Validation\n            if (property === 'age' && (typeof value !== 'number' || value < 0)) {\n                throw new Error('Age must be a positive number');\n            }\n            \n            if (property === 'email' && !value.includes('@')) {\n                throw new Error('Invalid email format');\n            }\n            \n            return Reflect.set(target, property, value, receiver);\n        },\n        \n        has: function(target, property) {\n            console.log(`Checking if property exists: ${property}`);\n            return Reflect.has(target, property);\n        },\n        \n        deleteProperty: function(target, property) {\n            console.log(`Deleting property: ${property}`);\n            return Reflect.deleteProperty(target, property);\n        }\n    };\n    \n    return new Proxy(target, handler);\n}",
+    "testCases": [
+      {
+        "input": "{\"name\":\"John\",\"age\":25}\n\"name\"",
+        "output": "\"John\"",
+        "hidden": false
+      },
+      {
+        "input": "{\"name\":\"Jane\"}\n\"age\"\n30",
+        "output": "30",
+        "hidden": false
+      },
+      {
+        "input": "{\"name\":\"Bob\"}\n\"email\"\n\"bob@example.com\"",
+        "output": "\"bob@example.com\"",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Create a function that implements the Strategy Pattern.",
+    "initialCode": "class PaymentProcessor {\n    constructor(strategy) {\n        this.strategy = strategy;\n    }\n    \n    processPayment(amount) {\n        // Your code here\n    }\n    \n    setStrategy(strategy) {\n        // Your code here\n    }\n}\n\n// Strategy implementations\nconst creditCardStrategy = {\n    // Your code here\n};\n\nconst paypalStrategy = {\n    // Your code here\n};",
+    "solution": "// PSEUDO CODE:\n// 1. Define different strategy objects with the same interface\n// 2. Create a context class that uses a strategy\n// 3. Allow switching strategies at runtime\n// 4. Each strategy implements the same method differently\n\nclass PaymentProcessor {\n    constructor(strategy) {\n        this.strategy = strategy;\n    }\n    \n    processPayment(amount) {\n        return this.strategy.process(amount);\n    }\n    \n    setStrategy(strategy) {\n        this.strategy = strategy;\n    }\n}\n\n// Strategy implementations\nconst creditCardStrategy = {\n    process: function(amount) {\n        const fee = amount * 0.02; // 2% fee\n        return {\n            total: amount + fee,\n            fee: fee,\n            method: 'Credit Card',\n            message: `Processed $${amount} via Credit Card. Fee: $${fee.toFixed(2)}`\n        };\n    }\n};\n\nconst paypalStrategy = {\n    process: function(amount) {\n        const fee = Math.max(amount * 0.03, 0.5); // 3% or $0.50 minimum\n        return {\n            total: amount + fee,\n            fee: fee,\n            method: 'PayPal',\n            message: `Processed $${amount} via PayPal. Fee: $${fee.toFixed(2)}`\n        };\n    }\n};\n\nconst bankTransferStrategy = {\n    process: function(amount) {\n        return {\n            total: amount,\n            fee: 0,\n            method: 'Bank Transfer',\n            message: `Processed $${amount} via Bank Transfer. No fees!`\n        };\n    }\n};",
+    "testCases": [
+      {
+        "input": "creditCardStrategy\n100",
+        "output": "{\"total\":102,\"fee\":2,\"method\":\"Credit Card\",\"message\":\"Processed $100 via Credit Card. Fee: $2.00\"}",
+        "hidden": false
+      },
+      {
+        "input": "paypalStrategy\n50",
+        "output": "{\"total\":51.5,\"fee\":1.5,\"method\":\"PayPal\",\"message\":\"Processed $50 via PayPal. Fee: $1.50\"}",
+        "hidden": false
+      },
+      {
+        "input": "bankTransferStrategy\n200",
+        "output": "{\"total\":200,\"fee\":0,\"method\":\"Bank Transfer\",\"message\":\"Processed $200 via Bank Transfer. No fees!\"}",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Implement a function that demonstrates ES6 Generators.",
+    "initialCode": "function* fibonacciGenerator() {\n    // Your code here\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Use function* syntax to create a generator function\n// 2. Use yield keyword to pause and resume execution\n// 3. Maintain state between yields using local variables\n// 4. Return values one at a time when next() is called\n\nfunction* fibonacciGenerator() {\n    let a = 0;\n    let b = 1;\n    \n    while (true) {\n        yield a;\n        [a, b] = [b, a + b];\n    }\n}\n\nfunction* rangeGenerator(start, end, step = 1) {\n    for (let i = start; i <= end; i += step) {\n        yield i;\n    }\n}\n\nfunction* primeGenerator() {\n    yield 2;\n    let num = 3;\n    \n    const isPrime = (n) => {\n        for (let i = 2; i <= Math.sqrt(n); i++) {\n            if (n % i === 0) return false;\n        }\n        return true;\n    };\n    \n    while (true) {\n        if (isPrime(num)) {\n            yield num;\n        }\n        num += 2;\n    }\n}",
+    "testCases": [
+      {
+        "input": "fibonacciGenerator\nnext\nnext\nnext\nnext\nnext",
+        "output": "{\"value\":0,\"done\":false}\n{\"value\":1,\"done\":false}\n{\"value\":1,\"done\":false}\n{\"value\":2,\"done\":false}\n{\"value\":3,\"done\":false}",
+        "hidden": false
+      },
+      {
+        "input": "rangeGenerator\n1\n5\n1\nnext\nnext\nnext",
+        "output": "{\"value\":1,\"done\":false}\n{\"value\":2,\"done\":false}\n{\"value\":3,\"done\":false}",
+        "hidden": false
+      },
+      {
+        "input": "primeGenerator\nnext\nnext\nnext",
+        "output": "{\"value\":2,\"done\":false}\n{\"value\":3,\"done\":false}\n{\"value\":5,\"done\":false}",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "questionText": "Create a function that implements the Decorator Pattern.",
+    "initialCode": "class Coffee {\n    cost() {\n        return 5;\n    }\n    \n    description() {\n        return 'Basic coffee';\n    }\n}\n\nclass MilkDecorator {\n    constructor(coffee) {\n        this.coffee = coffee;\n    }\n    \n    // Your code here\n}",
+    "solution": "// PSEUDO CODE:\n// 1. Create a base class/component\n// 2. Create decorator classes that wrap the base class\n// 3. Each decorator adds functionality while maintaining the same interface\n// 4. Decorators can be stacked/combined\n\nclass Coffee {\n    cost() {\n        return 5;\n    }\n    \n    description() {\n        return 'Basic coffee';\n    }\n}\n\nclass MilkDecorator {\n    constructor(coffee) {\n        this.coffee = coffee;\n    }\n    \n    cost() {\n        return this.coffee.cost() + 1.5;\n    }\n    \n    description() {\n        return this.coffee.description() + ', milk';\n    }\n}\n\nclass SugarDecorator {\n    constructor(coffee) {\n        this.coffee = coffee;\n    }\n    \n    cost() {\n        return this.coffee.cost() + 0.5;\n    }\n    \n    description() {\n        return this.coffee.description() + ', sugar';\n    }\n}\n\nclass VanillaDecorator {\n    constructor(coffee) {\n        this.coffee = coffee;\n    }\n    \n    cost() {\n        return this.coffee.cost() + 2;\n    }\n    \n    description() {\n        return this.coffee.description() + ', vanilla';\n    }\n}\n\nclass CaramelDecorator {\n    constructor(coffee) {\n        this.coffee = coffee;\n    }\n    \n    cost() {\n        return this.coffee.cost() + 2.5;\n    }\n    \n    description() {\n        return this.coffee.description() + ', caramel';\n    }\n}",
+    "testCases": [
+      {
+        "input": "new CaramelDecorator(new MilkDecorator(new Coffee()))\ncost",
+        "output": "8.5",
+        "hidden": false
+      },
+      {
+        "input": "new CaramelDecorator(new MilkDecorator(new Coffee()))\ndescription",
+        "output": "\"Basic coffee, milk, caramel\"",
+        "hidden": false
+      },
+      {
+        "input": "new SugarDecorator(new VanillaDecorator(new Coffee()))\ncost",
+        "output": "9.5",
+        "hidden": true
+      }
+    ]
+  }
+]

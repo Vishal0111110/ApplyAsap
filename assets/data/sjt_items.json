@@ -1,0 +1,229 @@
+{
+  "items": [
+    {
+      "itemId": "sjt_001",
+      "category": "leadership",
+      "type": 1,
+      "content": {
+        "scenario": "You are leading a team project. One team member consistently misses deadlines without valid reasons. The project deadline is approaching fast.",
+        "bestWorstQuestion": "Choose the BEST and WORST approaches from the following:",
+        "responseOptions": [
+          "A. Privately discuss the situation and set clear expectations with the team member",
+          "B. Report the issue immediately to senior management",
+          "C. Ignore the problem and hope the team member improves",
+          "D. Criticize the team member publicly in the next team meeting",
+          "E. Take over the team member's work yourself"
+        ]
+      },
+      "parameters": {
+        "a": 1.1,
+        "b": 0.3,
+        "c": 0.0
+      },
+      "difficulty": 0.3,
+      "discrimination": 1.1,
+      "guessing": 0.0,
+      "correctResponses": ["best_A", "worst_C"],
+      "distractors": ["best_B", "worst_D", "best_E"],
+      "metadata": {
+        "topic": "team management",
+        "trait": "leadership"
+      },
+      "scoringMatrix": {
+        "A_D": 8,
+        "A_E": 7,
+        "A_B": 6,
+        "A_C": 2,
+        "B_D": 6,
+        "B_E": 5,
+        "B_C": 1,
+        "D_E": 2,
+        "D_C": 0,
+        "E_C": -1
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "sjt_002",
+      "category": "problem_solving",
+      "type": 1,
+      "content": {
+        "scenario": "Your team is facing a technical challenge that none of you have encountered before. You have a tight deadline.",
+        "bestWorstQuestion": "Select the BEST and WORST courses of action:",
+        "responseOptions": [
+          "A. Research solutions online and consult colleagues",
+          "B. Ask for a deadline extension immediately",
+          "C. Panic and blame others for the situation",
+          "D. Experiment with unknown solutions without backup plans",
+          "E. Consult with experienced experts outside the team"
+        ]
+      },
+      "parameters": {
+        "a": 0.9,
+        "b": 0.8,
+        "c": 0.0
+      },
+      "difficulty": 0.8,
+      "discrimination": 0.9,
+      "guessing": 0.0,
+      "correctResponses": ["best_A", "worst_C"],
+      "distractors": ["best_E", "worst_D", "best_B"],
+      "scoringMatrix": {
+        "A_E": 7,
+        "A_D": 8,
+        "A_B": 6,
+        "A_C": 2,
+        "E_D": 6,
+        "E_B": 5,
+        "E_C": 1,
+        "D_B": 1,
+        "D_C": 0,
+        "B_C": -2
+      },
+      "metadata": {
+        "topic": "technical challenges",
+        "trait": "analytical thinking"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "sjt_003",
+      "category": "communication",
+      "type": 1,
+      "content": {
+        "scenario": "You need to give critical feedback to a skilled employee who is performing well overall but has one bad habit that affects the team.",
+        "bestWorstQuestion": "Choose the most effective and least effective approaches:",
+        "responseOptions": [
+          "A. Schedule a private meeting focused on specific behaviors",
+          "B. Provide feedback in an email to avoid discomfort",
+          "C. Bring it up casually in team meetings",
+          "D. Wait for someone else to address it",
+          "E. Point out the issue immediately in front of others"
+        ]
+      },
+      "parameters": {
+        "a": 0.8,
+        "b": -0.2,
+        "c": 0.0
+      },
+      "difficulty": -0.2,
+      "discrimination": 0.8,
+      "guessing": 0.0,
+      "correctResponses": ["best_A", "worst_E"],
+      "distractors": ["best_C", "worst_D", "best_B"],
+      "scoringMatrix": {
+        "A_C": 8,
+        "A_B": 7,
+        "A_E": 9,
+        "A_D": 6,
+        "C_B": 5,
+        "C_E": 8,
+        "C_D": 4,
+        "B_E": 6,
+        "B_D": 3,
+        "E_D": 1
+      },
+      "metadata": {
+        "topic": "feedback delivery",
+        "trait": "interpersonal skills"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "sjt_004",
+      "category": "ethics",
+      "type": 1,
+      "content": {
+        "scenario": "You discover that a colleague has been taking shortcuts that could compromise product quality, but they are your friend.",
+        "bestWorstQuestion": "Select the most and least appropriate actions:",
+        "responseOptions": [
+          "A. Report the issue to management anonymously",
+          "B. Talk to your friend privately about concerns first",
+          "C. Keep quiet because they are your friend",
+          "D. Confront them publicly to discourage others",
+          "E. Report it directly to management with evidence"
+        ]
+      },
+      "parameters": {
+        "a": 1.0,
+        "b": 1.2,
+        "c": 0.0
+      },
+      "difficulty": 1.2,
+      "discrimination": 1.0,
+      "guessing": 0.0,
+      "correctResponses": ["best_E", "worst_C"],
+      "distractors": ["best_A", "worst_D", "best_B"],
+      "scoringMatrix": {
+        "E_D": 9,
+        "E_C": 8,
+        "E_A": 7,
+        "E_B": 6,
+        "D_C": 7,
+        "D_A": 6,
+        "D_B": 5,
+        "C_A": -2,
+        "C_B": 0,
+        "A_B": 3
+      },
+      "metadata": {
+        "topic": "ethical dilemmas",
+        "trait": "integrity"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    },
+    {
+      "itemId": "sjt_005",
+      "category": "stress_management",
+      "type": 1,
+      "content": {
+        "scenario": "During a high-pressure deadline, two team members start arguing about technical approach, potentially delaying the project.",
+        "bestWorstQuestion": "Choose the best and worst ways to handle this:",
+        "responseOptions": [
+          "A. Listen to both sides and facilitate a compromise",
+          "B. Step aside and let them resolve it on their own",
+          "C. Take sides immediately based on your expertise",
+          "D. Send everyone home to cool off",
+          "E. Call an immediate meeting with all stakeholders"
+        ]
+      },
+      "parameters": {
+        "a": 0.9,
+        "b": 0.1,
+        "c": 0.0
+      },
+      "difficulty": 0.1,
+      "discrimination": 0.9,
+      "guessing": 0.0,
+      "correctResponses": ["best_A", "worst_B"],
+      "distractors": ["best_E", "worst_C", "best_D"],
+      "scoringMatrix": {
+        "A_E": 6,
+        "A_C": 7,
+        "A_D": 8,
+        "A_B": 5,
+        "E_C": 4,
+        "E_D": 7,
+        "E_B": 3,
+        "C_D": 5,
+        "C_B": 2,
+        "D_B": 1
+      },
+      "metadata": {
+        "topic": "conflict resolution",
+        "trait": "emotional intelligence"
+      },
+      "active": true,
+      "createdAt": 1703606400000,
+      "authorId": "admin"
+    }
+  ]
+}

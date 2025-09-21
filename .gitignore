@@ -1,0 +1,60 @@
+# Flutter
+.dart_tool/
+.packages
+.pub/
+build/
+flutter_*.log
+
+# Android
+android/app/google-services.json
+android/.gradle/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# API Keys and Secrets
+assets/gemini.key
+*.key
+*.pem
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Firebase
+firebase.json
+google-services.json
+lib/firebase_options.dart
+firebase_options.dart
+
+# Firebase Service Account Keys (CRITICAL - Never commit these!)
+*.serviceAccountKey.json
+serviceAccountKey.json
+firebase-service-account.json
+*-firebase-adminsdk-*.json
+firebase-adminsdk-*.json
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+
+# Test results
+test-results/
+
+# Screenshots
+screenshots/
+
+# Local development
+local.properties
